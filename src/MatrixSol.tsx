@@ -151,5 +151,9 @@ export const MatrixSol =(matrix:matrix)=>{
         columnsCount : matrix[0].length,
         rowCount : matrix.length,
 
+        multiplyBy:(matrix_:matrix)=>{
+            return math.multiply(matrix,matrix_)
+        }
+
     }
 }

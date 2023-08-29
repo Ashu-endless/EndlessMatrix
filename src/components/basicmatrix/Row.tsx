@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { MatrixElement } from "./style";
 
-export const Row:FC<{row_:number[],index_:number,updateMatrix:Function}> = ({row_,index_,updateMatrix})=>{
+export const Row:FC<{row_:number[],index_:number,updateMatrix:Function,updateMatrixValues:Function}> = ({row_,index_,updateMatrix,updateMatrixValues})=>{
 
     const [row, setrow] = useState(row_)
 

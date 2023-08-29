@@ -36,3 +36,26 @@
     transform: rotate(360deg);
   }
 }
+
+#nav{
+  display: block;
+  background: #21262d;
+  padding: 10px;
+  border: none;
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: space-between;
+  align-items: center;
+  color:#971ad0;
+  font-weight: bold;
+
+}
+#addNewMatrix{
+  border: navajowhite;
+  font-family: monospace;
+  background: #9014d3;
+  color: white;
+  border-radius: 4px;
+  padding: 7px;
+  right: 20px;
+}

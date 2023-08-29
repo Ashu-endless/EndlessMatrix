@@ -1,24 +1,41 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { Row } from "./Row";
 import { ColumnAddBtn, MatrixDiv, MatrixElementsDiv, MatrixRCDiv, MatrixSolDiv, MatrixSolOptions, RowAddBtn,  } from "./style";
 import { MatrixSol } from "../../MatrixSol";
-import {PlusLg,DashLg,Calculator} from "react-bootstrap-icons"
+import {PlusLg,DashLg,Calculator,ZoomIn} from "react-bootstrap-icons"
 import { MatrixConnectorJson } from "../../App";
+import Moveable from "react-moveable";
+import {useXarrow} from "react-xarrows"
 
-export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson}> = ({matrixJson})=>{
 
-
+export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Function,insertNewMatrix?:Function,updateMatrixValues:Function,setconnection?:Function}> = ({matrixJson,UpdateMatrixRefs,insertNewMatrix,updateMatrixValues,setconnection})=>{
+    const updateXarrow = useXarrow()
     const [matrix, setmatrix] = useState(matrixJson.matrix)
     const [matrixSol, setmatrixSol] = useState(MatrixSol(matrixJson.matrix))
     const [grid_row_css, setgrid_row_css] = useState(`1fr 1fr`)
     const [grid_column_css, setgrid_column_css] = useState(`1fr 1fr`)
     const [nav_option, setnav_option] = useState("determinant")
+    const [pos, setpos] = useState(matrixJson.pos)
+    const [dragging, setdragging] = useState(false)
+    const [frame, setFrame] = useState({
+        translate: [0, 0],
+        rotate: 0,
+        transformOrigin: "50% 50%",
+      });
+
     
+
+    const DragTargetRef = useRef(null)
 
     useEffect(() => {
       setmatrix(matrixJson.matrix)
       console.log(matrixJson.matrix)
     }, [matrixJson.matrix])
+
+
+    useEffect(() => {
+        setpos(matrixJson.pos)
+      }, [matrixJson.pos])
 
     useEffect(() => {
         console.log(matrix)
@@ -39,7 +56,10 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson}> = ({matrixJson})=>
     }, [matrix])
 
 
-
+    useEffect(() => {
+        UpdateMatrixRefs && UpdateMatrixRefs(matrixJson.name,DragTargetRef)
+    }, [])
+    
     
 
 
@@ -51,7 +71,10 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson}> = ({matrixJson})=>
     function updateMatrix(rowIndex:number,columnIndex:number,value:number){
         let temp = [...matrix]
         temp[rowIndex][columnIndex] = value
+        console.log(temp)
         setmatrix(temp)
+        updateMatrixValues(matrixJson.name,temp)
+
     }
 
     function addRow(){
@@ -100,18 +123,48 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson}> = ({matrixJson})=>
 
         setmatrix(temp)
     }
+
+    
     
 
 
-    return <MatrixDiv id={matrixJson.name} style={{left:matrixJson.pos["x"],top:matrixJson.pos["y"],position:matrixJson.independent ? "absolute" : "relative"}} >
-    <textarea className="classic" defaultValue={matrixJson.name} />
+    return   <>
+    <Moveable
+    target={dragging ? DragTargetRef : null}
+    draggable={dragging}
+    throttleDrag={0}
+    zoom={1}
+    padding={{ left: 0, top: 0, right: 0, bottom: 0 }}
+    origin={false}
+    onDragStart={(e) => {
+      
+      e.set(frame.translate);
+    }}
+    onDrag={(e) => {
+      frame.translate = e.beforeTranslate;
+    }}
+ 
+    onRender={(e) => {
+      const { translate, rotate, transformOrigin } = frame;
+      e.target.style.transformOrigin = transformOrigin;
+      e.target.style.transform =
+    //   `translate(${translate[0] > 0 ? translate[0] : 0 }px, ${translate[1] > 0 ? translate[1] : 0 }px)` +
+      `translate(${translate[0]}px, ${translate[1]}px)` +
+      ` rotate(${rotate}deg)`;
+        updateXarrow()
+    }}
+    />
 
+
+    <MatrixDiv onMouseUp={()=>{setdragging(false)}}  ref={DragTargetRef} id={matrixJson.name} style={{left:pos.x,top:pos.y,position:matrixJson.independent ? "absolute" : "relative"}} >
+    <textarea className="classic" defaultValue={matrixJson.name} />
+    <span onMouseOver={()=>{setdragging(true)}} onMouseLeave={()=>{setdragging(false)}} onMouseUp={()=>{setdragging(false)} }  > <ZoomIn/>  </span>
     <MatrixRCDiv>
 
         <MatrixElementsDiv style={{gridTemplateColumns:grid_column_css,gridTemplateRows:grid_row_css}} >
         
         {matrix.map((row,index)=>
-            <Row updateMatrix={updateMatrix} key={index} index_={index} row_={row} />
+            <Row updateMatrixValues={updateMatrixValues} updateMatrix={updateMatrix} key={index} index_={index} row_={row} />
         )}
 
 
@@ -138,7 +191,7 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson}> = ({matrixJson})=>
             } 
         </ColumnAddBtn>
 
-        {/* <Calculator/> */}
+        <Calculator  onClick={()=>{ insertNewMatrix && insertNewMatrix("product of A and C",["A","*","B"]) ; setconnection && setconnection([["A","B"],["B","product of A and C"]]) }} />
     
     </MatrixRCDiv>
     <MatrixSolDiv>
@@ -156,11 +209,13 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson}> = ({matrixJson})=>
         <div style={{position:"relative"}} >
             {nav_option === "determinant" ? <span>{matrixSol.determinant()}</span> : <></> }
             {nav_option === "rank" ? <span>{matrixSol.rank()}</span> : <></> }
-            {nav_option === "transpose" ? <BasicMatrix key={"two"} matrixJson={{name:`transpose of ${matrixJson.name}`,matrix:matrixSol.transpose(),pos:{x:0,y:0},independent:false}} />  : <></> }
+            {nav_option === "transpose" ? <BasicMatrix key={"two"} updateMatrixValues={updateMatrixValues} matrixJson={{name:`transpose of ${matrixJson.name}`,matrix:matrixSol.transpose(),pos:{x:0,y:0},independent:false}} />  : <></> }
             {nav_option === "inverse" && typeof(matrixSol.inverse()) === "string"  ? <span>{matrixSol.inverse()}</span>  : <></> }
-            {nav_option === "inverse" && typeof(matrixSol.inverse()) != "string"  ? <BasicMatrix key={"two"} matrixJson={{name:`inverse of ${matrixJson.name}`,matrix:matrixSol.inverse(),pos:{x:0,y:0},independent:false}} />  : <></> }
+            {nav_option === "inverse" && typeof(matrixSol.inverse()) != "string"  ? <BasicMatrix updateMatrixValues={updateMatrixValues} key={"two"} matrixJson={{name:`inverse of ${matrixJson.name}`,matrix:matrixSol.inverse(),pos:{x:0,y:0},independent:false}} />  : <></> }
             
         </div>
     </MatrixSolDiv>
     </MatrixDiv> 
+    </>
+
 }
