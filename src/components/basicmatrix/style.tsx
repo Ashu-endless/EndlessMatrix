@@ -20,6 +20,7 @@ font-family: "Roboto";
 font-weight: 600;
 color: white;
 position:absolute;
+touch-action:none;
 `
 export const MatrixElementsDiv = styled.div`
 display: grid;
@@ -41,7 +42,7 @@ export const MatrixElement = styled.input.attrs({
   background: #1e1929;
   color: #fff;
   cursor: pointer;
-  width: 75px;
+  width: 50px;
   aspect-ratio: 1;
   border-radius: 5px;
   border: none;
@@ -114,3 +115,10 @@ padding: 3px;
 border-radius: 5px;
 display: grid;
 gap: 5px;`
+
+
+export const InputndBtn = styled.div`
+display: grid;
+grid-auto-flow: column;
+align-items: center;
+background: #4d4dc2;`

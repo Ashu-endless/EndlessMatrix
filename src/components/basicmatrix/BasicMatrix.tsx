@@ -1,31 +1,35 @@
-import { FC, useEffect, useRef, useState } from "react";
+/* eslint-disable react/jsx-pascal-case */
+import React,{ FC, LegacyRef, ReactElement, ReactHTMLElement, useEffect, useRef, useState } from "react";
 import { Row } from "./Row";
 import { ColumnAddBtn, MatrixDiv, MatrixElementsDiv, MatrixRCDiv, MatrixSolDiv, MatrixSolOptions, RowAddBtn,  } from "./style";
-import { MatrixSol } from "../../MatrixSol";
-import {PlusLg,DashLg,Calculator,ZoomIn} from "react-bootstrap-icons"
+import { matrix, MatrixSol } from "../../MatrixSol";
+import {PlusLg,DashLg,Calculator,ArrowsMove} from "react-bootstrap-icons"
 import { MatrixConnectorJson } from "../../App";
-import Moveable from "react-moveable";
+// import Moveable from "react-moveable";
 import {useXarrow} from "react-xarrows"
+import Draggable from 'react-draggable';
+import DefaultTippy,{Option_Tippy} from "../defaults/DefaultTippy";
+import { AddOptions, MultiplyOptions, SubtractionOptions } from "./MatrixCalcOptions";
 
-
-export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Function,insertNewMatrix?:Function,updateMatrixValues:Function,setconnection?:Function}> = ({matrixJson,UpdateMatrixRefs,insertNewMatrix,updateMatrixValues,setconnection})=>{
+export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Function,insertNewMatrix:Function,updateMatrixValues:Function,setconnection?:Function,insertNewDependentMatrix:Function,zoom:string}> = ({matrixJson,UpdateMatrixRefs,insertNewMatrix,updateMatrixValues,setconnection,json,insertNewDependentMatrix,zoom})=>{
     const updateXarrow = useXarrow()
     const [matrix, setmatrix] = useState(matrixJson.matrix)
-    const [matrixSol, setmatrixSol] = useState(MatrixSol(matrixJson.matrix))
+    const [matrixSol, setmatrixSol] = useState(Array.isArray(matrixJson.matrix) ? MatrixSol(matrixJson.matrix) : undefined)
     const [grid_row_css, setgrid_row_css] = useState(`1fr 1fr`)
     const [grid_column_css, setgrid_column_css] = useState(`1fr 1fr`)
     const [nav_option, setnav_option] = useState("determinant")
     const [pos, setpos] = useState(matrixJson.pos)
-    const [dragging, setdragging] = useState(false)
-    const [frame, setFrame] = useState({
-        translate: [0, 0],
-        rotate: 0,
-        transformOrigin: "50% 50%",
-      });
+    const TippyBtnRef = useRef()
+    // const [dragging, setdragging] = useState(false)
+    // const [frame, setFrame] = useState({
+    //     translate: [0, 0],
+    //     rotate: 0,
+    //     transformOrigin: "50% 50%",
+    //   });
 
     
 
-    const DragTargetRef = useRef(null)
+    const DragTargetRef = useRef<HTMLElement | null>(null)
 
     useEffect(() => {
       setmatrix(matrixJson.matrix)
@@ -39,7 +43,10 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Fu
 
     useEffect(() => {
         console.log(matrix)
-      setmatrixSol(MatrixSol(matrix))
+        
+      setmatrixSol(Array.isArray(matrix) ? MatrixSol(matrix) : undefined)
+
+        if(Array.isArray(matrix)){
 
         let grid_column = ``
         for (let i = 0; i < MatrixSol(matrix).columnsCount;i++) {
@@ -51,8 +58,8 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Fu
             grid_row = grid_row.concat(" 1fr")
         }
         // console.log(grid_row)
-        setgrid_row_css(grid_row)
-
+        setgrid_row_css(grid_row)}
+        // updateMatrixValues(matrixJson.name,matrix)
     }, [matrix])
 
 
@@ -69,26 +76,28 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Fu
 
 
     function updateMatrix(rowIndex:number,columnIndex:number,value:number){
-        let temp = [...matrix]
+        let temp = [...(matrix as matrix)]
         temp[rowIndex][columnIndex] = value
         console.log(temp)
-        setmatrix(temp)
+        // setmatrix(temp)
         updateMatrixValues(matrixJson.name,temp)
 
     }
 
     function addRow(){
-        let temp = [...matrix]
+        let temp = [...(matrix as matrix)]
         let new_row = []
-        while (new_row.length !== matrixSol.columnsCount) {
+        if(matrixSol !== undefined){
+        while (new_row.length !== (matrixSol).columnsCount) {
             new_row.push(0)
-        }
+        }}
 
         temp.push(new_row)
-        setmatrix(temp)
+        // setmatrix(temp)
+        updateMatrixValues(matrixJson.name,temp)
     }
     function deleteRow(){
-        let temp = [...matrix]
+        let temp = [...(matrix as matrix)]
         // let new_row = []
         // while (new_row.length !== matrixSol.columnsCount) {
         //     new_row.push(0)
@@ -96,32 +105,35 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Fu
 
         // temp.push(new_row)
         temp.pop()
-        setmatrix(temp)
+        // setmatrix(temp)
+        updateMatrixValues(matrixJson.name,temp)
     }
     
     function addColumn(){
         const temp = JSON.parse(JSON.stringify(matrix));
-        console.log(temp)
+        // console.log(temp)
         // console.log(JSON.parse(JSON.stringify(temp)))
         for(let row of temp){
             row.push(0)
         }
 
-        console.log(temp)
+        // console.log(temp)
 
-        setmatrix(temp)
+        // setmatrix(temp)
+        updateMatrixValues(matrixJson.name,temp)
     }
     function deleteColumn(){
-        const temp =[...matrix]
-        console.log(temp)
+        const temp =[...(matrix as matrix)]
+        // console.log(temp)
         // console.log(JSON.parse(JSON.stringify(temp)))
         for(let row of temp){
             row.pop()
         }
 
-        console.log(temp)
+        // console.log(temp)
 
-        setmatrix(temp)
+        // setmatrix(temp)
+        updateMatrixValues(matrixJson.name,temp)
     }
 
     
@@ -129,42 +141,35 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Fu
 
 
     return   <>
-    <Moveable
-    target={dragging ? DragTargetRef : null}
-    draggable={dragging}
-    throttleDrag={0}
-    zoom={1}
-    padding={{ left: 0, top: 0, right: 0, bottom: 0 }}
-    origin={false}
-    onDragStart={(e) => {
-      
-      e.set(frame.translate);
-    }}
-    onDrag={(e) => {
-      frame.translate = e.beforeTranslate;
-    }}
- 
-    onRender={(e) => {
-      const { translate, rotate, transformOrigin } = frame;
-      e.target.style.transformOrigin = transformOrigin;
-      e.target.style.transform =
-    //   `translate(${translate[0] > 0 ? translate[0] : 0 }px, ${translate[1] > 0 ? translate[1] : 0 }px)` +
-      `translate(${translate[0]}px, ${translate[1]}px)` +
-      ` rotate(${rotate}deg)`;
-        updateXarrow()
-    }}
-    />
+    <Draggable
+        axis="both"
+        defaultPosition={{x: 0, y: 0}}
+        position={undefined}
+        handle={".handle"}
+        // grid={[25, 25]}
+        scale={parseInt(zoom)/100}
+        onStart={()=>{console.log("drag");DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}}
+        onDrag={()=>{updateXarrow();DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}}
+        onStop={()=>{DragTargetRef.current && DragTargetRef.current && DragTargetRef.current.classList.remove("dragging_matrix")}}
+        
+    >
 
 
-    <MatrixDiv onMouseUp={()=>{setdragging(false)}}  ref={DragTargetRef} id={matrixJson.name} style={{left:pos.x,top:pos.y,position:matrixJson.independent ? "absolute" : "relative"}} >
+    <MatrixDiv   ref={(DragTargetRef as LegacyRef<HTMLDivElement>)} id={matrixJson.name} style={{left:pos.x,top:pos.y,position:matrixJson.independent ? "absolute" : "relative"}} >
     <textarea className="classic" defaultValue={matrixJson.name} />
-    <span onMouseOver={()=>{setdragging(true)}} onMouseLeave={()=>{setdragging(false)}} onMouseUp={()=>{setdragging(false)} }  > <ZoomIn/>  </span>
+    {/* display:matrixJson.independent ? "block" : "none" */}
+    <span onTouchStart={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}} onClick={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}} onMouseLeave={()=>{DragTargetRef.current && DragTargetRef.current.classList.remove("dragging_matrix")}} onMouseOver={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}} className="handle" style={{position: 'absolute',top: '5px',right: '5px',fontSize: 'xx-large',cursor: 'grab',}}> <ArrowsMove/>  </span>
+    
+    
+   {Array.isArray(matrix) && matrixSol !== undefined ? 
+
+    <>
     <MatrixRCDiv>
 
         <MatrixElementsDiv style={{gridTemplateColumns:grid_column_css,gridTemplateRows:grid_row_css}} >
         
         {matrix.map((row,index)=>
-            <Row updateMatrixValues={updateMatrixValues} updateMatrix={updateMatrix} key={index} index_={index} row_={row} />
+            <Row matrixJson={matrixJson} updateMatrixValues={updateMatrixValues} updateMatrix={updateMatrix} key={index} index_={index} row_={row} />
         )}
 
 
@@ -190,8 +195,14 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Fu
             </>
             } 
         </ColumnAddBtn>
+        {matrixJson.independent ?  
+            <DefaultTippy BtnRef={TippyBtnRef} content={<MatrixCalcOptions matrixName={matrixJson.name} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} />}   >
+            {/* onClick={()=>{ insertNewMatrix && insertNewMatrix("product of A and C",["A","*","B"]) ; setconnection && setconnection([["A","B"],["B","product of A and C"]]) }}  */}
+        <span style={{display: 'grid',justifyContent: 'center',alignItems: 'center',color: '#add8e6',fontSize: 'x-large'}} >
 
-        <Calculator  onClick={()=>{ insertNewMatrix && insertNewMatrix("product of A and C",["A","*","B"]) ; setconnection && setconnection([["A","B"],["B","product of A and C"]]) }} />
+        <Calculator   />
+        </span>
+            </DefaultTippy> : <></>}
     
     </MatrixRCDiv>
     <MatrixSolDiv>
@@ -209,13 +220,49 @@ export const BasicMatrix:FC<{matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Fu
         <div style={{position:"relative"}} >
             {nav_option === "determinant" ? <span>{matrixSol.determinant()}</span> : <></> }
             {nav_option === "rank" ? <span>{matrixSol.rank()}</span> : <></> }
-            {nav_option === "transpose" ? <BasicMatrix key={"two"} updateMatrixValues={updateMatrixValues} matrixJson={{name:`transpose of ${matrixJson.name}`,matrix:matrixSol.transpose(),pos:{x:0,y:0},independent:false}} />  : <></> }
+            {nav_option === "transpose" ? <BasicMatrix zoom={zoom} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} key={"two"} updateMatrixValues={updateMatrixValues} matrixJson={{name:`transpose of ${matrixJson.name}`,matrix:matrixSol.transpose(),pos:{x:0,y:0},independent:false}} />  : <></> }
             {nav_option === "inverse" && typeof(matrixSol.inverse()) === "string"  ? <span>{matrixSol.inverse()}</span>  : <></> }
-            {nav_option === "inverse" && typeof(matrixSol.inverse()) != "string"  ? <BasicMatrix updateMatrixValues={updateMatrixValues} key={"two"} matrixJson={{name:`inverse of ${matrixJson.name}`,matrix:matrixSol.inverse(),pos:{x:0,y:0},independent:false}} />  : <></> }
+            {nav_option === "inverse" && typeof(matrixSol.inverse()) != "string"  ? <BasicMatrix zoom={zoom} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} updateMatrixValues={updateMatrixValues} key={"two"} matrixJson={{name:`inverse of ${matrixJson.name}`,matrix:matrixSol.inverse(),pos:{x:0,y:0},independent:false}} />  : <></> }
             
         </div>
     </MatrixSolDiv>
+    </>
+    :
+    <p>{matrix}</p> 
+}
     </MatrixDiv> 
+    </Draggable>
     </>
 
 }
+
+
+
+
+ 
+const MatrixCalcOptions: FC<{json:{[key:string] : MatrixConnectorJson},insertNewMatrix:Function,insertNewDependentMatrix:Function,matrixName:string}> = ({json,insertNewMatrix,insertNewDependentMatrix,matrixName}) => {
+    
+    const MulBtnRef = useRef()
+    
+    return ( <div className="tippy_div" >
+        <p className="title" >Calculation</p>
+        {/* {Object.keys()} */}
+        <DefaultTippy BtnRef={MulBtnRef} content={<MultiplyOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
+        <Option_Tippy value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
+            Multiply with
+        </Option_Tippy>    
+        </DefaultTippy>
+        <DefaultTippy BtnRef={MulBtnRef} content={<AddOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
+        <Option_Tippy value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
+            Add
+        </Option_Tippy>    
+        </DefaultTippy>
+        <DefaultTippy BtnRef={MulBtnRef} content={<SubtractionOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
+        <Option_Tippy value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
+            Subtract
+        </Option_Tippy>    
+        </DefaultTippy>
+
+    </div> );
+}
+ 

@@ -10,7 +10,7 @@ export const MatrixSol =(matrix:matrix)=>{
         determinant  : ()=>{
 
             if(!isSquareMatrix){
-                return "can't calculate determinant of non-square matric"
+                return "can't calculate determinant of non-square matrix"
             }
 
             return math.det(matrix)
@@ -151,9 +151,38 @@ export const MatrixSol =(matrix:matrix)=>{
         columnsCount : matrix[0].length,
         rowCount : matrix.length,
 
-        multiplyBy:(matrix_:matrix)=>{
+        multiplyBy:(matrix_:matrix | number)=>{
+
+            if(typeof(matrix_) !== "number" && matrix[0].length !== matrix_.length){
+                
+                return "The number of columns of the first matrix in the multiplication process must equal the number of rows of the second matrix"
+            }
+
             return math.multiply(matrix,matrix_)
-        }
+        },
+        add:(matrix_:matrix)=>{
+
+            if(matrix[0].length !== matrix_[0].length || matrix.length !== matrix_.length  ){
+                return "for addition of two matrices , their order should be same i.e the number of rows and columns are  same for the matrices"
+            }
+
+            return math.add(matrix,matrix_)
+        },
+        subtract:(matrix_:matrix)=>{
+            if(matrix[0].length !== matrix_[0].length || matrix.length !== matrix_.length  ){
+                return "for difference of two matrices , their order should be same i.e the number of rows and columns are  same for the matrices"
+            }
+
+            return math.subtract(matrix,matrix_)
+        },
+        multiplybyScalar:(number:number)=>{
+            return math.multiply(matrix,number)
+        },
+        power:(number:number)=>{
+            math.dotPow(matrix,number)
+        },
+
+        
 
     }
 }
