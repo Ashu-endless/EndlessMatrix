@@ -136,6 +136,19 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
         updateMatrixValues(matrixJson.name,temp)
     }
 
+    function CalcOptionOnMount(){
+        for(let el of document.querySelectorAll(".matrix-div") as unknown as []){
+            (el as any).style.zIndex = "1"
+        }
+
+        let md = document.querySelector(`#${matrixJson.name}`) 
+        if(md){
+        (md as any).style.zIndex = "2"
+
+        }
+
+    }
+
     
     
 
@@ -155,7 +168,7 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
     >
 
 
-    <MatrixDiv   ref={(DragTargetRef as LegacyRef<HTMLDivElement>)} id={matrixJson.name} style={{left:pos.x,top:pos.y,position:matrixJson.independent ? "absolute" : "relative"}} >
+    <MatrixDiv  className="matrix-div"  ref={(DragTargetRef as LegacyRef<HTMLDivElement>)} id={matrixJson.name} style={{left:pos.x,top:pos.y,position:matrixJson.independent ? "absolute" : "relative"}} >
     <textarea className="classic" defaultValue={matrixJson.name} />
     {/* display:matrixJson.independent ? "block" : "none" */}
     <span onTouchStart={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}} onClick={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}} onMouseLeave={()=>{DragTargetRef.current && DragTargetRef.current.classList.remove("dragging_matrix")}} onMouseOver={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}} className="handle" style={{position: 'absolute',top: '5px',right: '5px',fontSize: 'xx-large',cursor: 'grab',}}> <ArrowsMove/>  </span>
@@ -196,7 +209,7 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
             } 
         </ColumnAddBtn>
         {matrixJson.independent ?  
-            <DefaultTippy BtnRef={TippyBtnRef} content={<MatrixCalcOptions matrixName={matrixJson.name} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} />}   >
+            <DefaultTippy onMount={CalcOptionOnMount} BtnRef={TippyBtnRef} content={<MatrixCalcOptions matrixName={matrixJson.name} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} />}   >
             {/* onClick={()=>{ insertNewMatrix && insertNewMatrix("product of A and C",["A","*","B"]) ; setconnection && setconnection([["A","B"],["B","product of A and C"]]) }}  */}
         <span style={{display: 'grid',justifyContent: 'center',alignItems: 'center',color: '#add8e6',fontSize: 'x-large'}} >
 

@@ -14,6 +14,9 @@ body {
   height: 100vh;
   touch-action: [pan-x pan-y];
 }
+*{
+  box-sizing: border-box;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -107,6 +110,10 @@ p.options {
   border-radius: 10px;
 }
 
+.my-validation-message::before {
+  display: none!important;
+}
+
 ::-webkit-scrollbar-track {
   background: #1e1929;
   border-radius: inherit;
@@ -150,3 +157,5 @@ p.options {
 	-webkit-animation: blink-1 0.6s infinite both;
 	        animation: blink-1 0.6s infinite both;
 }
+
+/* Range input */

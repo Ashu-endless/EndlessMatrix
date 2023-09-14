@@ -9,9 +9,10 @@ interface Props {
   onactiveMeclass?: string;
   BtnRef: any;
   TriggererRef?: any;
+  onMount?:Function;
 }
 
-const DefaultTippy:React.FC<Props> =({children,content,BtnRef,TriggererRef,onactiveMeclass}) => {
+const DefaultTippy:React.FC<Props> =({children,content,BtnRef,TriggererRef,onactiveMeclass,onMount}) => {
  
     const [loaded, setloaded] = useState(false)
     const meRef = useRef <HTMLElement | null>(null)
@@ -24,6 +25,7 @@ const DefaultTippy:React.FC<Props> =({children,content,BtnRef,TriggererRef,onact
     if(loaded)
     return ( <>
     <Tippy
+
           content={content}
           animation="perspective"
           placement="auto"
@@ -33,7 +35,7 @@ const DefaultTippy:React.FC<Props> =({children,content,BtnRef,TriggererRef,onact
           arrow={true}
           duration={[350, 200]}
           onCreate={(instance) => (BtnRef.current = instance)}
-          onMount={()=>{if (onactiveMeclass && meRef.current ) meRef.current.classList.add(onactiveMeclass)}}
+          onMount={()=>{if (onactiveMeclass && meRef.current ) meRef.current.classList.add(onactiveMeclass);onMount && onMount()}}
           onHide={()=>{if (onactiveMeclass && meRef.current ) meRef.current.classList.remove(onactiveMeclass)}}
           >
             <span ref={meRef}>

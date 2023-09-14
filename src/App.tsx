@@ -56,6 +56,9 @@ function App() {
       cancelButtonText:"Cancel",
       showConfirmButton : false,
       input:"text",
+      customClass: {
+        validationMessage: 'my-validation-message'
+      },
       
       
       inputValidator: (value) => {
@@ -73,15 +76,20 @@ function App() {
 
             // console.log(input?.value)
               // Swal.showLoading()
-                if( !(Object.keys(json).includes(input.value)) ){
+                if(input.value === ""){
+                  Swal.showValidationMessage(`type matrix new matrix name`)
+                  if(c)
+                  c.style.display = "none"
+                }
+                else if( (!(Object.keys(json).includes(input.value)) ) ){
                   // setpdi_name(input.value)
                   Swal.hideLoading()
-                  Swal.showValidationMessage(`${input.value} is available`)
+                  Swal.showValidationMessage(`✔️ <b>${input.value }&nbsp;  </b> is available`)
                   if(c)
                   c.style.display = "block"
                 }else{
                   Swal.hideLoading()
-                  Swal.showValidationMessage(`${input.value} already exists`)
+                  Swal.showValidationMessage(`❗ <b>${input.value } &nbsp;   </b>  already exists`)
                   if(c)
                   c.style.display = "none"
                 }
@@ -198,6 +206,8 @@ function App() {
   
 
   return (<>
+  <div>
+
   <nav id='nav' >Endless Matrix 
   <div>
 
@@ -207,6 +217,7 @@ function App() {
   </div>
     </nav>
   <div id='zoom_div' > zoom  <input min={25} type="range" name="" id="" value={parseInt(zoom)} onChange={(e)=>{setzoom(`${e.target.value}%`)}} /> {zoom} </div> 
+  </div>
 
     {/* <span onClick={()=>{insertNewMatrix("B")}} >Add Matrix </span> */}
     <div id="MatrixPage">
