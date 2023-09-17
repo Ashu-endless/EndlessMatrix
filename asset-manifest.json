@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/EndlessMatrix/static/css/main.c01f347e.css",
-    "main.js": "/EndlessMatrix/static/js/main.da1654e2.js",
+    "main.css": "/EndlessMatrix/static/css/main.72a92135.css",
+    "main.js": "/EndlessMatrix/static/js/main.3458365c.js",
     "static/js/787.b4b3d96d.chunk.js": "/EndlessMatrix/static/js/787.b4b3d96d.chunk.js",
     "index.html": "/EndlessMatrix/index.html",
-    "main.c01f347e.css.map": "/EndlessMatrix/static/css/main.c01f347e.css.map",
-    "main.da1654e2.js.map": "/EndlessMatrix/static/js/main.da1654e2.js.map",
+    "main.72a92135.css.map": "/EndlessMatrix/static/css/main.72a92135.css.map",
+    "main.3458365c.js.map": "/EndlessMatrix/static/js/main.3458365c.js.map",
     "787.b4b3d96d.chunk.js.map": "/EndlessMatrix/static/js/787.b4b3d96d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c01f347e.css",
-    "static/js/main.da1654e2.js"
+    "static/css/main.72a92135.css",
+    "static/js/main.3458365c.js"
   ]
 }
