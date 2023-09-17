@@ -1,0 +1,1 @@
+export type deleteMatrix  = (name:string)=>void

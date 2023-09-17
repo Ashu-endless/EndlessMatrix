@@ -21,6 +21,7 @@ font-weight: 600;
 color: white;
 position:absolute;
 touch-action:none;
+border:2px solid cornflowerblue;
 `
 export const MatrixElementsDiv = styled.div`
 display: grid;
@@ -36,8 +37,8 @@ border-radius: 4px;
 padding: 10px;
 `
 
-export const MatrixElement = styled.input.attrs({ 
-    type: 'number',
+export const MatrixElementInput = styled.input.attrs({ 
+    type: 'text',
   })`
   background: #1e1929;
   color: #fff;
@@ -122,3 +123,18 @@ display: grid;
 grid-auto-flow: column;
 align-items: center;
 background: #4d4dc2;`
+
+export const NameAndDelIco = styled.div`
+display: grid;
+grid-auto-flow: column;
+gap: 5px;
+align-items: center;
+padding-bottom: 5px;`
+
+export const CalcBtn = styled.div`
+display: grid;
+justify-content: center;
+align-items: center;
+color: #add8e6;
+font-size: x-large;
+color:lightslategrey`

@@ -9,10 +9,13 @@ export const MatrixSol =(matrix:matrix)=>{
     return{
         determinant  : ()=>{
 
-            if(!isSquareMatrix){
+            if(!( matrix.length === matrix[0].length)){
                 return "can't calculate determinant of non-square matrix"
             }
 
+            // console.log(isSquareMatrix)
+            // console.log(matrix)
+            // console.log(matrix.length,matrix[0].length)
             return math.det(matrix)
             // switch (matrix.length) {
             //     case 1:
@@ -161,16 +164,17 @@ export const MatrixSol =(matrix:matrix)=>{
             return math.multiply(matrix,matrix_)
         },
         add:(matrix_:matrix)=>{
+            // console.log(math.eigs(matrix))
 
             if(matrix[0].length !== matrix_[0].length || matrix.length !== matrix_.length  ){
-                return "for addition of two matrices , their order should be same i.e the number of rows and columns are  same for the matrices"
+                return "for addition of two matrices , their order should be same i.e the number of rows and columns should be same for  the matrices"
             }
 
             return math.add(matrix,matrix_)
         },
         subtract:(matrix_:matrix)=>{
             if(matrix[0].length !== matrix_[0].length || matrix.length !== matrix_.length  ){
-                return "for difference of two matrices , their order should be same i.e the number of rows and columns are  same for the matrices"
+                return "for difference of two matrices , their order should be same i.e the number of rows and columns should be same for the matrices"
             }
 
             return math.subtract(matrix,matrix_)
@@ -179,7 +183,7 @@ export const MatrixSol =(matrix:matrix)=>{
             return math.multiply(matrix,number)
         },
         power:(number:number)=>{
-            math.dotPow(matrix,number)
+            return math.dotPow(matrix,number)
         },
 
         
