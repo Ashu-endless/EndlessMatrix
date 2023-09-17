@@ -3,7 +3,7 @@ import React,{ FC, LegacyRef,  useEffect, useRef, useState } from "react";
 import { Row } from "./Row";
 import { CalcBtn, ColumnAddBtn, MatrixDiv, MatrixElementsDiv, MatrixRCDiv, MatrixSolDiv, MatrixSolOptions, NameAndDelIco, RowAddBtn,  } from "./style";
 import { matrix, MatrixSol } from "../../MatrixSol";
-import {PlusLg,DashLg,Calculator,ArrowsMove, Trash} from "react-bootstrap-icons"
+import {PlusLg,DashLg,Calculator,ArrowsMove, Trash, ArrowDown, ArrowUp} from "react-bootstrap-icons"
 import { MatrixConnectorJson } from "../../App";
 // import Moveable from "react-moveable";
 import Draggable from 'react-draggable';
@@ -74,6 +74,7 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
         setTimeout(() => {
             setIsnew(false)
         }, 600);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
@@ -262,7 +263,7 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
 
             {/*  */}
         {matrixJson.independent !== "local" ? 
-            <DefaultTippy  BtnRef={TippyBtnRef} content={<MatrixCalcOptions matrixName={matrixJson.name} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} />}   >
+            <DefaultTippy  BtnRef={TippyBtnRef} content={<MatrixCalcOptions scale={2.5- (parseFloat(zoom)/100)} matrixName={matrixJson.name} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} />}   >
 <CalcBtn>
         <Calculator   />
         </CalcBtn> 
@@ -275,6 +276,7 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
             <li className={nav_option === "transpose" ? "active" : ""} onClick={()=>{setnav_option("transpose")}} > transpose </li>
             <li className={nav_option === "inverse" ? "active" : ""} onClick={()=>{setnav_option("inverse")}} > inverse </li>
             <li className={nav_option === "rank" ? "active" : ""} onClick={()=>{setnav_option("rank")}} > rank </li>
+            <li className={nav_option === "none" ? "active" : ""} onClick={()=>{setnav_option("none")}} >  {nav_option === "none" ? <ArrowUp/> : <ArrowDown/>} </li>
             {/* <li> cofactor </li>
             <li> minor </li> */}
         </MatrixSolOptions>
@@ -304,11 +306,13 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
 
 
  
-const MatrixCalcOptions: FC<{json:{[key:string] : MatrixConnectorJson},insertNewMatrix:Function,insertNewDependentMatrix:Function,matrixName:string}> = ({json,insertNewMatrix,insertNewDependentMatrix,matrixName}) => {
+const MatrixCalcOptions: FC<{json:{[key:string] : MatrixConnectorJson},insertNewMatrix:Function,insertNewDependentMatrix:Function,matrixName:string,scale:number}> = ({json,insertNewMatrix,insertNewDependentMatrix,matrixName,scale}) => {
     
+
+
     const MulBtnRef = useRef()
     
-    return ( <div className="tippy_div" >
+    return ( <div className="tippy_div" style={{transform:`scale(${scale})`,transformOrigin:"left top"}} >
         <p className="title" >Calculation</p>
         {/* {Object.keys()} */}
         <DefaultTippy BtnRef={MulBtnRef} content={<MultiplyOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >

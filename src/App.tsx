@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import './App.css';
 import { MatrixPage } from './components/page/Page';
-import { deleteMatrix } from './components/Types';
 import { matrix, MatrixSol } from './MatrixSol';
 
 const colors = ["orange","yellow","grey","blue","red","white"]
@@ -49,7 +48,7 @@ function App() {
 
     Swal.fire({
       title: `Choose a <span style="color:blue" >name</span> for new Matrix`,
-      text:`This can be changed later`,
+      // text:`This can be changed later`,
       confirmButtonText: `Done`,
       showCancelButton: true,
       backdrop: `left top no-repeat rgb(0 0 0 / 62%)`,

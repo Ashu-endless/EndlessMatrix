@@ -11,7 +11,7 @@ export const MultiplyOptions :FC<{json:Matricesjson,insertNewDependentMatrix:Fun
 
     const [scalar, setscalar] = useState<number | undefined>(undefined)
 
-    return <div className="tippy_div">
+    return <div className="tippy_div" style={{border:"1px solid grey"}} >
         { Object.keys(json).map((name)=> <Option_Tippy key={name} onSelect={()=>{insertNewDependentMatrix(`${matrixName} * ${name_parenthesis(name)}`,[matrixName,"*",name])}}  value={name} > {name} </Option_Tippy> ) }
         <span className="or_btn" >OR</span>
         <p>scalar value</p>
@@ -28,7 +28,7 @@ export const PowerOptions :FC<{json:Matricesjson,insertNewDependentMatrix:Functi
 
     const [scalar, setscalar] = useState<number | undefined>(undefined)
 
-    return <div className="tippy_div">
+    return <div className="tippy_div" style={{border:"1px solid grey"}}>
         <p>scalar value</p>
         <InputndBtn>
         <input  onInput={(e:React.ChangeEvent<HTMLInputElement>)=>{setscalar(parseInt(e.target.value))}} type="number" name="" id="" />
@@ -42,7 +42,7 @@ export const PowerOptions :FC<{json:Matricesjson,insertNewDependentMatrix:Functi
 export const AddOptions :FC<{json:Matricesjson,insertNewDependentMatrix:Function;matrixName:string}> = ({json,insertNewDependentMatrix,matrixName})=>{
     
     
-    return <div className="tippy_div">
+    return <div className="tippy_div" style={{border:"1px solid grey"}}>
         { Object.keys(json).map((name)=> <Option_Tippy key={name} onSelect={()=>{insertNewDependentMatrix(`${matrixName} + ${name_parenthesis(name)}`,[matrixName,"+",name])}}  value={name} > {name} </Option_Tippy> ) }
 
     </div>
@@ -50,7 +50,7 @@ export const AddOptions :FC<{json:Matricesjson,insertNewDependentMatrix:Function
 export const SubtractionOptions :FC<{json:Matricesjson,insertNewDependentMatrix:Function;matrixName:string}> = ({json,insertNewDependentMatrix,matrixName})=>{
     
     
-    return <div className="tippy_div">
+    return <div className="tippy_div" style={{border:"1px solid grey"}}>
         { Object.keys(json).map((name)=> <Option_Tippy key={name} onSelect={()=>{insertNewDependentMatrix(`${matrixName} - ${name_parenthesis(name)}`,[matrixName,"-",name])}}  value={name} > {name} </Option_Tippy> ) }
 
     </div>
