@@ -165,7 +165,7 @@ export const MatrixSol =(matrix:matrix)=>{
         },
         add:(matrix_:matrix)=>{
             // console.log(math.eigs(matrix))
-
+            // console.log(math.numeric("6/7","Fraction"))
             if(matrix[0].length !== matrix_[0].length || matrix.length !== matrix_.length  ){
                 return "for addition of two matrices , their order should be same i.e the number of rows and columns should be same for  the matrices"
             }
@@ -189,4 +189,17 @@ export const MatrixSol =(matrix:matrix)=>{
         
 
     }
+}
+
+
+
+export function fracStr(val:number){
+
+    if(val % 1 !== 0){
+
+    return `${math.numeric(val,"Fraction").n}/${math.numeric(val,"Fraction").d}`
+
+    }
+
+    return val
 }

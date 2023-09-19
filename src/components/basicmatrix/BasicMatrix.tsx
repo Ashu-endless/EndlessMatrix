@@ -2,7 +2,7 @@
 import React,{ FC, LegacyRef,  useEffect, useRef, useState } from "react";
 import { Row } from "./Row";
 import { CalcBtn, ColumnAddBtn, MatrixDiv, MatrixElementsDiv, MatrixRCDiv, MatrixSolDiv, MatrixSolOptions, NameAndDelIco, RowAddBtn,  } from "./style";
-import { matrix, MatrixSol } from "../../MatrixSol";
+import { fracStr, matrix, MatrixSol } from "../../MatrixSol";
 import {PlusLg,DashLg,Calculator,ArrowsMove, Trash, ArrowDown, ArrowUp} from "react-bootstrap-icons"
 import { MatrixConnectorJson } from "../../App";
 // import Moveable from "react-moveable";
@@ -284,7 +284,7 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
 
 
         <div style={{position:"relative"}} >
-            {nav_option === "determinant" ? <span className="matrix_err_text" >{matrixSol.determinant()}</span> : <></> }
+            {nav_option === "determinant" ? <span className="matrix_err_text" >{fracStr((matrixSol.determinant()))}</span> : <></> }
             {nav_option === "rank" ? <span className="matrix_err_text" >{matrixSol.rank()}</span> : <></> }
             {nav_option === "transpose" ? <BasicMatrix deleteMatrix={deleteMatrix}  MatrixRefs={MatrixRefs} zoom={zoom} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} key={"two"} updateMatrixValues={updateMatrixValues} matrixJson={{dependency:[], name:`transpose of ${matrixJson.name}`,matrix:matrixSol.transpose(),pos:{x:0,y:0},independent:"local"}} />  : <></> }
             {nav_option === "inverse" && typeof(matrixSol.inverse()) === "string"  ? <span className="matrix_err_text" >{matrixSol.inverse()}</span>  : <></> }

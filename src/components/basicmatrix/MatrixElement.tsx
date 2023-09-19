@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from "react"
 import { MatrixElementInput } from "./style"
+const math = require("mathjs");
 
 export const MatrixElement:FC<{val_:string|number,updateMatrix:Function,index_:number,index:number,disabled:boolean}> =({val_,updateMatrix,index_,index,disabled}) =>{
 
@@ -55,8 +56,31 @@ export const MatrixElement:FC<{val_:string|number,updateMatrix:Function,index_:n
         }
     }
 
+    function OnInputany(value:string){
+
+        if(value.includes("/")){
+            let n = parseInt(value.split("/")[0])
+            let d = parseInt(value.split("/")[1])
+            // console.log(n/d)
+            if(!isNaN(n/d)){
+                // console.log(n,d)
+                updateMatrix(index_,index,n/d)
+            }
+            // math.numeric("0.67","Fraction")
+        }else{
+
+            
+            if(isNaN(parseFloat(value))){
+            }else{
+                updateMatrix(index_,index,parseFloat(value))
+            }
+        }
+        setval(value)
+            
+    }
+
     return<MatrixElementInput disabled={disabled} 
     // onKeyDown={(e:any)=>{if(e.keycode === 38){ setval(parseFloat(e.target.value) + 1) }}} 
     onBlur={(e:React.ChangeEvent<HTMLInputElement>)=>{if(val === "" || val=== "-" ){setval("0")}}} 
-    data-index={`${index_},${index}`} type={"text"} value={val}  onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{OnInput(e.target.value)}} />
+    data-index={`${index_},${index}`} type={"text"} value={val}  onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{OnInputany(e.target.value)}} />
 }
