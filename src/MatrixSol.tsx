@@ -195,7 +195,7 @@ export const MatrixSol =(matrix:matrix)=>{
 
 export function fracStr(val:number){
 
-    if(val % 1 !== 0){
+    if(val % 1 !== 0 && typeof(val) === "number"){
 
     return `${math.numeric(val,"Fraction").n}/${math.numeric(val,"Fraction").d}`
 
