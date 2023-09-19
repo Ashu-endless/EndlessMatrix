@@ -164,7 +164,9 @@ export const MatrixSol =(matrix:matrix)=>{
             return math.multiply(matrix,matrix_)
         },
         add:(matrix_:matrix)=>{
-            // console.log(math.eigs(matrix))
+
+            let p = [[6,-2,2],[-2,3,-1],[2,-1,3]]
+            console.log(math.eigs(p))
             // console.log(math.numeric("6/7","Fraction"))
             if(matrix[0].length !== matrix_[0].length || matrix.length !== matrix_.length  ){
                 return "for addition of two matrices , their order should be same i.e the number of rows and columns should be same for  the matrices"
@@ -185,7 +187,23 @@ export const MatrixSol =(matrix:matrix)=>{
         power:(number:number)=>{
             return math.dotPow(matrix,number)
         },
+        eigenValue : ()=>{
 
+            if(!( matrix.length === matrix[0].length)){
+                return "eigen value exists only for square matrix"
+            }
+
+            console.log(matrix)
+
+            try {
+
+                return math.eigs(matrix)
+            }
+            catch(err){
+                return "error"
+            }
+
+        }
         
 
     }

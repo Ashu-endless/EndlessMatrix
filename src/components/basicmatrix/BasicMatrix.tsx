@@ -273,6 +273,7 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
     <MatrixSolDiv>
         <MatrixSolOptions>
             <li className={nav_option === "determinant" ? "active" : ""} onClick={()=>{setnav_option("determinant")}} > determinant </li>
+            <li className={nav_option === "eigen_value" ? "active" : ""} onClick={()=>{setnav_option("eigen_value")}} > eigen value </li>
             <li className={nav_option === "transpose" ? "active" : ""} onClick={()=>{setnav_option("transpose")}} > transpose </li>
             <li className={nav_option === "inverse" ? "active" : ""} onClick={()=>{setnav_option("inverse")}} > inverse </li>
             <li className={nav_option === "rank" ? "active" : ""} onClick={()=>{setnav_option("rank")}} > rank </li>
@@ -285,6 +286,7 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
 
         <div style={{position:"relative"}} >
             {nav_option === "determinant" ? <span className="matrix_err_text" >{fracStr((matrixSol.determinant()))}</span> : <></> }
+            {nav_option === "eigen_value" ? <span className="matrix_err_text" >{ typeof(matrixSol.eigenValue()) === "string" ? matrixSol.eigenValue() : JSON.stringify(matrixSol.eigenValue().values).split("[")[1].split("]")[0] }</span> : <></> }
             {nav_option === "rank" ? <span className="matrix_err_text" >{matrixSol.rank()}</span> : <></> }
             {nav_option === "transpose" ? <BasicMatrix deleteMatrix={deleteMatrix}  MatrixRefs={MatrixRefs} zoom={zoom} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} key={"two"} updateMatrixValues={updateMatrixValues} matrixJson={{dependency:[], name:`transpose of ${matrixJson.name}`,matrix:matrixSol.transpose(),pos:{x:0,y:0},independent:"local"}} />  : <></> }
             {nav_option === "inverse" && typeof(matrixSol.inverse()) === "string"  ? <span className="matrix_err_text" >{matrixSol.inverse()}</span>  : <></> }

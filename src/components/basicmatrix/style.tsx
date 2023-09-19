@@ -102,6 +102,8 @@ margin: 0;
 border-radius: 5px;
 background: #0d1117;
 font-family: monospace;
+max-width:80vw;
+overflow:auto;
 
 > li {
   border-right: 1px solid #41415c;
