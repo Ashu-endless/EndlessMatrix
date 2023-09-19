@@ -144,7 +144,7 @@ function App() {
     // console.log(code[2])
 
     let matrix = json[code[0]].matrix as matrix
-    console.log(matrix)
+    // console.log(matrix)
     let matrix_ = typeof(code[2]) !== "number" ?  json[code[2]].matrix as matrix : code[2] as matrix
 
     switch (code[1]) {
@@ -229,7 +229,7 @@ function App() {
 
 
 
-    let mat_dependent_on_del = []
+    let mat_dependent_on_del = [name]
 
     for (let name_key of Object.keys(temp_json)){
       if(temp_json[name_key].dependency.includes(name)){
@@ -284,10 +284,10 @@ function App() {
     console.log(connection)
   }, [connection])
 
-  useEffect(() => {
-    console.log(MatrixRefs,"App")
+  // useEffect(() => {
+  //   console.log(MatrixRefs,"App")
     
-  }, [MatrixRefs])
+  // }, [MatrixRefs])
 
 
 

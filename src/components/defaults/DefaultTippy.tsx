@@ -10,9 +10,10 @@ interface Props {
   BtnRef: any;
   TriggererRef?: any;
   onMount?:Function;
+  placement?:"top" | "bottom";
 }
 
-const DefaultTippy:React.FC<Props> =({children,content,BtnRef,TriggererRef,onactiveMeclass,onMount}) => {
+const DefaultTippy:React.FC<Props> =({children,content,BtnRef,TriggererRef,onactiveMeclass,onMount,placement}) => {
  
     const [loaded, setloaded] = useState(false)
     const meRef = useRef <HTMLElement | null>(null)
@@ -28,7 +29,7 @@ const DefaultTippy:React.FC<Props> =({children,content,BtnRef,TriggererRef,onact
 
           content={content}
           animation="perspective"
-          placement="auto"
+          placement={placement || "auto"}
           trigger="click"
           interactive={true}
           inertia={true}

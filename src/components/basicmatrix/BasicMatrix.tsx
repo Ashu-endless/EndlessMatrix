@@ -204,8 +204,8 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
         // grid={[25, 25]}
         disabled={matrixJson.independent === "local"}
         scale={parseInt(zoom)/100}
-        onStart={()=>{console.log("drag");DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}}
-        onDrag={()=>{updateXarrow();DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix");console.log("first");}}
+        onStart={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}}
+        onDrag={()=>{updateXarrow();DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix");}}
         onStop={()=>{DragTargetRef.current && DragTargetRef.current && DragTargetRef.current.classList.remove("dragging_matrix");}}
         
     >
@@ -315,22 +315,22 @@ const MatrixCalcOptions: FC<{json:{[key:string] : MatrixConnectorJson},insertNew
     return ( <div className="tippy_div" style={{transform:`scale(${scale})`,transformOrigin:"left top"}} >
         <p className="title" >Calculation</p>
         {/* {Object.keys()} */}
-        <DefaultTippy BtnRef={MulBtnRef} content={<MultiplyOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
+        <DefaultTippy  placement="bottom" BtnRef={MulBtnRef} content={<MultiplyOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
         <Option_Tippy value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
             Multiply with
         </Option_Tippy>    
         </DefaultTippy>
-        <DefaultTippy BtnRef={MulBtnRef} content={<AddOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
+        <DefaultTippy  placement="bottom" BtnRef={MulBtnRef} content={<AddOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
         <Option_Tippy value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
             Add
         </Option_Tippy>    
         </DefaultTippy>
-        <DefaultTippy BtnRef={MulBtnRef} content={<SubtractionOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
+        <DefaultTippy  placement="bottom" BtnRef={MulBtnRef} content={<SubtractionOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
         <Option_Tippy value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
             Subtract
         </Option_Tippy>    
         </DefaultTippy>
-        <DefaultTippy BtnRef={MulBtnRef} content={<PowerOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
+        <DefaultTippy placement="bottom" BtnRef={MulBtnRef} content={<PowerOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
         <Option_Tippy value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
             Power
         </Option_Tippy>    

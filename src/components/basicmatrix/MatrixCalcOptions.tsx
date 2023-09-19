@@ -57,7 +57,6 @@ export const SubtractionOptions :FC<{json:Matricesjson,insertNewDependentMatrix:
 }
 
 function name_parenthesis(name:string){
-    console.log(name)
     if(name.includes("+") || name.includes("-") ||name.includes("*") || name.includes("**")  ){
         console.log("include")
         return `(${name})`
