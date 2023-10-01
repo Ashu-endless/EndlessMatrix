@@ -14,6 +14,7 @@ export interface MatrixConnectorJson  {
       name : string
       code ? : string[],
       dependency : string[],
+      new:boolean;
       
 
 }
@@ -26,7 +27,7 @@ function App() {
 
 
   // const [json, setjson] = useState<{[key:string] : MatrixConnectorJson}>({"A":{independent:true,matrix:[[3,1],[4,9]],pos:{x:0,y:30},name:"A" },"B":{independent:true,matrix:[[1,0],[5,0]],pos:{x:500,y:120},name:"B"},"C":{independent:false,matrix:MatrixSol(),pos:{x:900,y:120},name:"C"}})
-  const [json, setjson] = useState<{[key:string] : MatrixConnectorJson}>({"A":{independent:true,matrix:[[0,0],[0,0]],pos:{x:20,y:20},name:"A",dependency:[] }})
+  const [json, setjson] = useState<{[key:string] : MatrixConnectorJson}>({"A":{independent:true,matrix:[[0,0],[0,0]],pos:{x:20,y:20},name:"A",dependency:[],new:true }})
   const [MatrixRefs, setMatrixRefs] = useState<{[key:string]:any}>({})
   const [connection, setconnection] = useState<string[][]>([])
   const [zoom, setzoom] = useState<string>("100%")
@@ -73,26 +74,31 @@ function App() {
           if(input)
           input.oninput = () => {
             name = input.value
-            let c = Swal.getConfirmButton()
+            let confirmButton = Swal.getConfirmButton()
 
             // console.log(input?.value)
               // Swal.showLoading()
                 if(input.value === ""){
                   Swal.showValidationMessage(`type matrix new matrix name`)
-                  if(c)
-                  c.style.display = "none"
+                  if(confirmButton)
+                  confirmButton.style.display = "none"
+                }else if (/^\d/.test(input.value)){
+                  Swal.hideLoading()
+                  Swal.showValidationMessage(`❗ name can't start with integer`)
+                  if(confirmButton)
+                  confirmButton.style.display = "none"
                 }
                 else if( (!(Object.keys(json).includes(input.value)) ) ){
                   // setpdi_name(input.value)
                   Swal.hideLoading()
                   Swal.showValidationMessage(`✔️ <b>${input.value }&nbsp;  </b> is available`)
-                  if(c)
-                  c.style.display = "block"
+                  if(confirmButton)
+                  confirmButton.style.display = "block"
                 }else{
                   Swal.hideLoading()
                   Swal.showValidationMessage(`❗ <b>${input.value } &nbsp;   </b>  already exists`)
-                  if(c)
-                  c.style.display = "none"
+                  if(confirmButton)
+                  confirmButton.style.display = "none"
                 }
               
           }  },
@@ -107,7 +113,7 @@ function App() {
       // }
   
       let temp = {...json};
-      temp[name] = {independent:code === undefined ? true : false,matrix:[[0,0],[0,0]],pos,name,code,dependency:[]}
+      temp[name] = {independent:code === undefined ? true : false,matrix:[[0,0],[0,0]],pos,name,code,dependency:[],new:true}
 
 
 
@@ -135,7 +141,7 @@ function App() {
       code[2] = code[2].split("(")[1].split(")")[0]
     }
     
-    temp[name] = {independent:false,pos,name,code,matrix:[],dependency:[code[0],code[2],...json[code[0]].dependency,]}
+    temp[name] = {independent:false,pos,name,code,matrix:[],dependency:[code[0],code[2],...json[code[0]].dependency,],new:false}
     if(typeof(code[2]) !== "number"){
       temp[name].dependency = [...temp[name].dependency,...json[code[2]].dependency]
     }

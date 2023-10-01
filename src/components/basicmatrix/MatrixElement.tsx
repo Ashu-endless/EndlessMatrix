@@ -1,11 +1,10 @@
 import { FC, useEffect, useState } from "react"
 import { MatrixElementInput } from "./style"
-const math = require("mathjs");
 
-export const MatrixElement:FC<{val_:string|number,updateMatrix:Function,index_:number,index:number,disabled:boolean}> =({val_,updateMatrix,index_,index,disabled}) =>{
+export const MatrixElement:FC<{new_:boolean,val_:string|number,updateMatrix:Function,index_:number,index:number,disabled:boolean}> =({val_,updateMatrix,index_,index,disabled,new_}) =>{
 
 
-    const [val, setval] = useState(val_)
+    const [val, setval] = useState(new_ ? "" : val_ )
 
 
     // useEffect(() => {
@@ -19,42 +18,42 @@ export const MatrixElement:FC<{val_:string|number,updateMatrix:Function,index_:n
       }, [disabled, val_])
     
 
-    function OnInput(value:string){
-        if(value.startsWith("-")){
-            // if(isNaN(parseFloat(value))){
-            //     setval("-")
-            //     updateMatrix(index_,index,0)
-            // }
-            let temp = value.substring(1);
-            if(/^\d+$/.test(temp)){
-                setval(value)
-                updateMatrix(index_,index,parseFloat(value))
-            }
+    // function OnInput(value:string){
+    //     if(value.startsWith("-")){
+    //         // if(isNaN(parseFloat(value))){
+    //         //     setval("-")
+    //         //     updateMatrix(index_,index,0)
+    //         // }
+    //         let temp = value.substring(1);
+    //         if(/^\d+$/.test(temp)){
+    //             setval(value)
+    //             updateMatrix(index_,index,parseFloat(value))
+    //         }
 
-            if(value.length === 1){
-                setval("-")
-                updateMatrix(index_,index,0)
-            }
-            // else{
-            //     setval(val)
-            // }
-        }
+    //         if(value.length === 1){
+    //             setval("-")
+    //             updateMatrix(index_,index,0)
+    //         }
+    //         // else{
+    //         //     setval(val)
+    //         // }
+    //     }
 
-        if(value === ""){
-            setval("");
-            updateMatrix(index_,index,0)
-        }
+    //     if(value === ""){
+    //         setval("");
+    //         updateMatrix(index_,index,0)
+    //     }
 
-        // if(!isNaN(parseFloat(value))){
-        //     setval(value)  
-        //     updateMatrix(index_,index,parseFloat(value))
-        // }
+    //     // if(!isNaN(parseFloat(value))){
+    //     //     setval(value)  
+    //     //     updateMatrix(index_,index,parseFloat(value))
+    //     // }
 
-        if(/^\d+$/.test(value)){
-            setval(value)
-            updateMatrix(index_,index,parseFloat(value))
-        }
-    }
+    //     if(/^\d+$/.test(value)){
+    //         setval(value)
+    //         updateMatrix(index_,index,parseFloat(value))
+    //     }
+    // }
 
     function OnInputany(value:string){
 
