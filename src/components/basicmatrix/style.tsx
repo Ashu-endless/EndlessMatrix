@@ -14,7 +14,7 @@ export const MatrixDiv = styled.div`
 border: 2px solid #726363;
 background: #21262d;
 width: fit-content;
-border-radius: 3px;
+border-radius: 10px;
 padding: 5px;
 font-family: "Roboto";
 font-weight: 600;

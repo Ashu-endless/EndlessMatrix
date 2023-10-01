@@ -37,8 +37,11 @@ textarea.classic{
   border-radius: 3px;
   font-family: 'Roboto Mono';
   min-width: 50px;
-  background:#1e1929;
+  background: #1e1929;
   color: white;
+  padding: 5px;
+  font-family: 'Roboto';
+  font-size: large;
 } 
 
 .tippy_div{
