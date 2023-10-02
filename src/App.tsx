@@ -4,20 +4,20 @@ import './App.css';
 import { MatrixPage } from './components/page/Page';
 import { matrix, MatrixSol } from './MatrixSol';
 
-const colors = ["orange","yellow","grey","blue","red","white"]
+const colors = ["orange","yellow","grey","blue","red","white","pink","purple"]
 
 export interface MatrixConnectorJson  {
       matrix : number[][] | string ;
       independent : boolean | "local";
       nested? : MatrixConnectorJson
-      pos : {x:number,y:number},
-      name : string
-      code ? : string[],
-      dependency : string[],
+      pos : {x:number,y:number};
+      name : string;
+      code ? : [matrix1:string,calcSign:string,matrix2 :(string | number),secondMatCode?:("transpose" | "inverse" | "integer")];
+      dependency : (string|number)[];
       new:boolean;
-      
-
 }
+export type insertNewDependentMatrix = (name:string,code:MatrixConnectorJson["code"])=> void
+export type insertNewMatrix = (name_:string,code?:any)=> void
 
 export interface Matricesjson {
   [key:string] : MatrixConnectorJson
@@ -125,46 +125,54 @@ function App() {
   }
 
 
-  async function insertNewDependentMatrix(name:string,code:string[]){
+  async function insertNewDependentMatrix(name:string,code:MatrixConnectorJson["code"]){
     let pos = {x:10,y:10}
-    // for( let matrixdiv of Object.keys(MatrixRefs) ){
-    //     pos.x = pos.x + MatrixRefs[matrixdiv].ref.current.offsetWidth + 40 
-    //     // pos.y = pos.y + matrixdiv.current.offsetWidth + 40 
-    // }
     let temp = {...json};
-    // if(name.includes("+") ||name.includes("-") ||name.includes("*") ||name.includes("**")  ){
-    //   name = `(${name})`
-    // }
-    // console.log(name)
-    
+    let matrix_: matrix | number | string =[[]];
+
     if(code && typeof(code[2]) !== "number" && code[2].startsWith("(")){
-      code[2] = code[2].split("(")[1].split(")")[0]
+        code[2] = code[2].split("(")[1].split(")")[0]
+    }
+
+    if(code){
+
+    if(code[3] === "integer"){
+        matrix_ = code[2]
+    }else if(code[3] === undefined){
+      matrix_ = json[code[2]].matrix
+      
+    }else if(code[3] === "transpose"){
+      matrix_ = MatrixSol(json[code[2]].matrix as matrix).transpose()
+    }else if(code[3] === "inverse"){
+      matrix_ = MatrixSol(json[code[2]].matrix as matrix).inverse()
     }
     
+
+    
     temp[name] = {independent:false,pos,name,code,matrix:[],dependency:[code[0],code[2],...json[code[0]].dependency,],new:false}
+    
     if(typeof(code[2]) !== "number"){
       temp[name].dependency = [...temp[name].dependency,...json[code[2]].dependency]
     }
 
-    // console.log(code[0])
-    // console.log(code[2])
+
 
     let matrix = json[code[0]].matrix as matrix
     // console.log(matrix)
-    let matrix_ = typeof(code[2]) !== "number" ?  json[code[2]].matrix as matrix : code[2] as matrix
+    // let matrix_ = typeof(code[2]) !== "number" ?  json[code[2]].matrix as matrix : code[2] as matrix
 
     switch (code[1]) {
       case "*":
-        temp[name].matrix = MatrixSol(matrix).multiplyBy(matrix_)
+        temp[name].matrix = MatrixSol(matrix).multiplyBy((matrix_ as matrix))
         break;
       case "**":
         temp[name].matrix = MatrixSol(matrix).power((matrix_ as unknown as number))
         break;
       case "-":
-        temp[name].matrix = MatrixSol(matrix).subtract(matrix_)
+        temp[name].matrix = MatrixSol(matrix).subtract((matrix_ as matrix))
         break;
       case "+":
-        temp[name].matrix = MatrixSol(matrix).add(matrix_)
+        temp[name].matrix = MatrixSol(matrix).add((matrix_ as matrix))
       
         break;
       default:
@@ -172,54 +180,80 @@ function App() {
     }
 
     // let temp_connection = [...connection]
-    let temp_connection = []
+    let temp_connection:string[][] = []
     let lineColor = colors[connection.length]
     temp_connection.push([code[0],name,lineColor])
 
 
-    if(typeof(code[2]) !== "number")
-    temp_connection.push([code[2],name,lineColor])
+    if(typeof(code[2]) !== "number"){
+
+      temp_connection.push([code[2],name,lineColor])
+    }
 
     
     temp_connection = [...temp_connection,...connection]
 
     setjson(temp)
-    setconnection(temp_connection)
+    setconnection(temp_connection)}
   }
 
 
   function updateMatrixValues(name:string,new_matrix:matrix){
       let temp = {...json}
       temp[name].matrix = new_matrix
+
       for(let key of Object.keys(temp)){
+
         let code = temp[key].code
+        // !!
+        if(code){
+        let matrix_: matrix | number | string =[[]];
 
         if(code && typeof(code[2]) !== "number" && code[2].startsWith("(")){
-          code[2] = code[2].split("(")[1].split(")")[0]
+            code[2] = code[2].split("(")[1].split(")")[0]
         }
+    
+        if(code[3] === "integer"){
+            matrix_ = code[2]
+        }else if(code[3] === undefined){
+          matrix_ = temp[code[2]].matrix
+          
+        }else if(code[3] === "transpose"){
+          matrix_ = MatrixSol(temp[code[2]].matrix as matrix).transpose()
+        }else if(code[3] === "inverse"){
+          matrix_ = MatrixSol(json[code[2]].matrix as matrix).inverse()
+        }
+
+
+        // !!
+
+
 
         if (!temp[key].independent && code !== undefined ){
 
-          let matrix = json[code[0]].matrix as matrix
-          let matrix_ = typeof(code[2]) !== "number" ?  json[code[2]].matrix as matrix : code[2] as matrix
+          let matrix = temp[code[0]].matrix as matrix
 
           switch (code[1]) {
             case "*":
-              temp[key].matrix = MatrixSol(matrix).multiplyBy(matrix_)
+              temp[key].matrix = MatrixSol(matrix).multiplyBy((matrix_ as matrix))
               break;
               case "**":
-                temp[name].matrix = MatrixSol(matrix).power((matrix_ as unknown as number))
+                temp[name].matrix = MatrixSol(matrix).power((matrix_ as number))
                 break;
             case "-":
-              temp[key].matrix = MatrixSol(matrix).subtract(matrix_)
+              temp[key].matrix = MatrixSol(matrix).subtract((matrix_ as matrix))
               break;
             case "+":
-              temp[key].matrix = MatrixSol(matrix).add(matrix_)
+              temp[key].matrix = MatrixSol(matrix).add((matrix_ as matrix))
               break;
             default:
               break;
           }
-      }}
+      }}}
+
+
+
+
       setjson(temp)
   }
 
@@ -322,7 +356,7 @@ function App() {
   temp.push(["D","C","red"])
   setconnection(temp)
 }} >Click</button> */}
-    <MatrixPage deleteMatrix={deleteMatrix}  MatrixRefs={MatrixRefs} zoom={zoom} connection_={connection} insertNewDependentMatrix={insertNewDependentMatrix} updateMatrixValues={updateMatrixValues} insertNewMatrix={insertNewMatrix} UpdateMatrixRefs={UpdateMatrixRefs} json={json} setjson={setjson}/>
+    <MatrixPage deleteMatrix={deleteMatrix}  MatrixRefs={MatrixRefs} zoom={zoom} connection_={connection} insertNewDependentMatrix={insertNewDependentMatrix} updateMatrixValues={updateMatrixValues} insertNewMatrix={insertNewMatrix} UpdateMatrixRefs={UpdateMatrixRefs} json={json} />
     </div>
 
   </>

@@ -2,6 +2,7 @@ import Tippy from "@tippyjs/react";
 import { LegacyRef, useEffect, useRef, useState} from "react";
 import React from 'react';
 import _ from "lodash";
+import "tippy.js/dist/tippy.css"
 
 interface Props {
   children:React.ReactNode;
@@ -10,10 +11,12 @@ interface Props {
   BtnRef: any;
   TriggererRef?: any;
   onMount?:Function;
-  placement?:"top" | "bottom";
+  placement?:"top" | "bottom" | "right";
+  trigger ?: "click" | "mouseover";
+  className? : string;
 }
 
-const DefaultTippy:React.FC<Props> =({children,content,BtnRef,TriggererRef,onactiveMeclass,onMount,placement}) => {
+const DefaultTippy:React.FC<Props> =({children,className,content,BtnRef,TriggererRef,onactiveMeclass,onMount,placement,trigger="click"}) => {
  
     const [loaded, setloaded] = useState(false)
     const meRef = useRef <HTMLElement | null>(null)
@@ -29,12 +32,14 @@ const DefaultTippy:React.FC<Props> =({children,content,BtnRef,TriggererRef,onact
 
           content={content}
           animation="perspective"
-          placement={placement || "auto"}
-          trigger="click"
+          placement={"right-end"}
+          trigger={trigger}
           interactive={true}
           inertia={true}
           arrow={true}
+          className={className}
           duration={[350, 200]}
+          
           onCreate={(instance) => (BtnRef.current = instance)}
           onMount={()=>{if (onactiveMeclass && meRef.current ) meRef.current.classList.add(onactiveMeclass);onMount && onMount()}}
           onHide={()=>{if (onactiveMeclass && meRef.current ) meRef.current.classList.remove(onactiveMeclass)}}

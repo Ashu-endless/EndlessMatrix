@@ -1,11 +1,11 @@
 import { FC, useEffect, useState } from "react";
-import { MatrixConnectorJson } from "../../App";
+import { insertNewDependentMatrix, insertNewMatrix, MatrixConnectorJson } from "../../App";
 import { BasicMatrix } from "../basicmatrix/BasicMatrix";
 import Xarrow,{Xwrapper} from "react-xarrows";
 import { deleteMatrix } from "../Types";
 // import Draggable from 'react-draggable';
 
-export const MatrixPage:FC<{json:{[key:string] : MatrixConnectorJson},setjson:Function,setMatrixRefs?:Function,UpdateMatrixRefs:Function,insertNewMatrix:Function,updateMatrixValues:Function,insertNewDependentMatrix:Function,connection_:string[][],zoom:string,MatrixRefs:{[key:string]:{ref:any,}},deleteMatrix:deleteMatrix}> = ({json,setjson,setMatrixRefs,UpdateMatrixRefs,insertNewMatrix,updateMatrixValues,insertNewDependentMatrix,connection_,zoom,MatrixRefs,deleteMatrix})=>{
+export const MatrixPage:FC<{json:{[key:string] : MatrixConnectorJson},UpdateMatrixRefs:Function,insertNewMatrix:insertNewMatrix,updateMatrixValues:Function,insertNewDependentMatrix:insertNewDependentMatrix,connection_:string[][],zoom:string,MatrixRefs:{[key:string]:{ref:any,}},deleteMatrix:deleteMatrix}> = ({json,UpdateMatrixRefs,insertNewMatrix,updateMatrixValues,insertNewDependentMatrix,connection_,zoom,MatrixRefs,deleteMatrix})=>{
 
 
 
@@ -57,24 +57,3 @@ export const MatrixPage:FC<{json:{[key:string] : MatrixConnectorJson},setjson:Fu
     </div>
 }
 
-
-// const Code = {
-//     "A" : {
-//         matrix : [[0,0],[0,0]],
-//         independent:true,
-//         inside : {
-//             "transpose of A":{
-
-//             }
-//         }
-
-//     },
-//     "B" : {
-//         matrix : [[0,0],[0,0]],
-//         independent:true,
-//     },
-//     "product of A & B" :{
-//         matrix  : [],
-//         independent : false
-//     }
-// }

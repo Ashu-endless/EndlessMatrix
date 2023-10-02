@@ -126,6 +126,13 @@ grid-auto-flow: column;
 align-items: center;
 background: #4d4dc2;`
 
+export const TextndIcon = styled.div`
+display: grid;
+grid-auto-flow: column;
+align-items: center;
+justify-content: space-between;
+`
+
 export const NameAndDelIco = styled.div`
 display: grid;
 grid-auto-flow: column;
@@ -136,7 +143,9 @@ padding-bottom: 5px;`
 export const CalcBtn = styled.div`
 display: grid;
 justify-content: center;
+grid-auto-flow: column;
 align-items: center;
 color: #add8e6;
-font-size: x-large;
-color:lightslategrey`
+font-size: medium;
+color: lightslategrey;
+cursor: pointer;`

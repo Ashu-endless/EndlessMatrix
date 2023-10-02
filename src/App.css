@@ -60,3 +60,19 @@
   right: 20px;
   cursor: pointer;
 }
+
+.tippy-content {
+  position: relative;
+  padding: 0px !important;
+  z-index: 1;
+}
+
+.active-tippy-option {
+  background: #21262d;
+  /* padding: 5px; */
+  margin: 0;
+}
+.active-tippy-option  svg {
+    stroke: #9014d3;
+    stroke-width: 4px;
+}

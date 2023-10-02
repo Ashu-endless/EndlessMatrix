@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-pascal-case */
 import React,{ FC, LegacyRef,  useEffect, useRef, useState } from "react";
 import { Row } from "./Row";
-import { CalcBtn, ColumnAddBtn, MatrixDiv, MatrixElementsDiv, MatrixRCDiv, MatrixSolDiv, MatrixSolOptions, NameAndDelIco, RowAddBtn,  } from "./style";
+import { CalcBtn, ColumnAddBtn, MatrixDiv, MatrixElementsDiv, MatrixRCDiv, MatrixSolDiv, MatrixSolOptions, NameAndDelIco, RowAddBtn, TextndIcon,  } from "./style";
 import { fracStr, matrix, MatrixSol } from "../../MatrixSol";
-import {PlusLg,DashLg,Calculator,ArrowsMove, Trash, ArrowDown, ArrowUp} from "react-bootstrap-icons"
-import { MatrixConnectorJson } from "../../App";
+import {PlusLg,DashLg,Calculator,ArrowsMove, Trash, ArrowDown, ArrowUp, CaretRight, Asterisk} from "react-bootstrap-icons"
+import { insertNewDependentMatrix, MatrixConnectorJson } from "../../App";
 // import Moveable from "react-moveable";
 import Draggable from 'react-draggable';
 import DefaultTippy,{Option_Tippy} from "../defaults/DefaultTippy";
@@ -13,7 +13,7 @@ import {useXarrow} from "react-xarrows";
 import Swal from 'sweetalert2';
 import { deleteMatrix } from "../Types";
 
-export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Function,insertNewMatrix:Function,updateMatrixValues:Function,setconnection?:Function,insertNewDependentMatrix:Function,zoom:string,MatrixRefs:{},deleteMatrix:deleteMatrix}> = ({matrixJson,UpdateMatrixRefs,insertNewMatrix,updateMatrixValues,setconnection,json,insertNewDependentMatrix,zoom,MatrixRefs,deleteMatrix})=>{
+export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Function,insertNewMatrix:Function,updateMatrixValues:Function,setconnection?:Function,insertNewDependentMatrix:insertNewDependentMatrix,zoom:string,MatrixRefs:{},deleteMatrix:deleteMatrix}> = ({matrixJson,UpdateMatrixRefs,insertNewMatrix,updateMatrixValues,setconnection,json,insertNewDependentMatrix,zoom,MatrixRefs,deleteMatrix})=>{
     const [matrix, setmatrix] = useState(matrixJson.matrix)
     const [matrixSol, setmatrixSol] = useState(Array.isArray(matrixJson.matrix) ? MatrixSol(matrixJson.matrix) : undefined)
     const [grid_row_css, setgrid_row_css] = useState(`1fr 1fr`)
@@ -263,8 +263,9 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
 
             {/*  */}
         {matrixJson.independent !== "local" ? 
-            <DefaultTippy  BtnRef={TippyBtnRef} content={<MatrixCalcOptions scale={2.5- (parseFloat(zoom)/100)} matrixName={matrixJson.name} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} />}   >
+            <DefaultTippy placement="bottom" BtnRef={TippyBtnRef} content={<MatrixCalcOptions scale={parseFloat(zoom)/100 < 0.6 ? 2.5- (parseFloat(zoom)/100) : 1} matrixName={matrixJson.name} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} />}   >
 <CalcBtn>
+    <span>Calc</span>
         <Calculator   />
         </CalcBtn> 
             </DefaultTippy> : <></>}
@@ -308,7 +309,7 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
 
 
  
-const MatrixCalcOptions: FC<{json:{[key:string] : MatrixConnectorJson},insertNewMatrix:Function,insertNewDependentMatrix:Function,matrixName:string,scale:number}> = ({json,insertNewMatrix,insertNewDependentMatrix,matrixName,scale}) => {
+const MatrixCalcOptions: FC<{json:{[key:string] : MatrixConnectorJson},insertNewMatrix:Function,insertNewDependentMatrix:insertNewDependentMatrix,matrixName:string,scale:number}> = ({json,insertNewMatrix,insertNewDependentMatrix,matrixName,scale}) => {
     
 
 
@@ -317,24 +318,44 @@ const MatrixCalcOptions: FC<{json:{[key:string] : MatrixConnectorJson},insertNew
     return ( <div className="tippy_div" style={{transform:`scale(${scale})`,transformOrigin:"left top"}} >
         <p className="title" >Calculation</p>
         {/* {Object.keys()} */}
-        <DefaultTippy  placement="bottom" BtnRef={MulBtnRef} content={<MultiplyOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
-        <Option_Tippy value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
+        <DefaultTippy placement="right" onactiveMeclass="active-tippy-option"  BtnRef={MulBtnRef} content={<MultiplyOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
+        <Option_Tippy  value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
+        <TextndIcon>
+            <Asterisk style={{fontSize:"xx-small"}} />
             Multiply with
+            <CaretRight/>
+                </TextndIcon>
         </Option_Tippy>    
         </DefaultTippy>
-        <DefaultTippy  placement="bottom" BtnRef={MulBtnRef} content={<AddOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
+        <DefaultTippy placement="bottom" onactiveMeclass="active-tippy-option"   BtnRef={MulBtnRef} content={<AddOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
         <Option_Tippy value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
+        <TextndIcon>
+            <PlusLg/>
             Add
+            <CaretRight/>
+                </TextndIcon>
         </Option_Tippy>    
         </DefaultTippy>
-        <DefaultTippy  placement="bottom" BtnRef={MulBtnRef} content={<SubtractionOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
+        <DefaultTippy  placement="bottom" onactiveMeclass="active-tippy-option"   BtnRef={MulBtnRef} content={<SubtractionOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
         <Option_Tippy value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
+                <TextndIcon>
+            <DashLg/>        
             Subtract
+            <CaretRight/>
+                </TextndIcon>
         </Option_Tippy>    
         </DefaultTippy>
-        <DefaultTippy placement="bottom" BtnRef={MulBtnRef} content={<PowerOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
+        <DefaultTippy placement="bottom" onactiveMeclass="active-tippy-option"  BtnRef={MulBtnRef} content={<PowerOptions matrixName={matrixName} insertNewDependentMatrix={insertNewDependentMatrix}  json={json} />} >
         <Option_Tippy value={""}  activeOption={undefined} style={undefined} ref={undefined} TippyRef={undefined} hideafterSelect={undefined} >
+        <TextndIcon>
+            <span style={{fontSize:"xx-small"}}>
+        <Asterisk/>
+        <Asterisk/>
+            </span>
+                
             Power
+            <CaretRight/>
+                </TextndIcon>
         </Option_Tippy>    
         </DefaultTippy>
 
