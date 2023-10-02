@@ -185,7 +185,7 @@ function App() {
     temp_connection.push([code[0],name,lineColor])
 
 
-    if(typeof(code[2]) !== "number"){
+    if(typeof(code[2]) !== "number" && code[3] === undefined){
 
       temp_connection.push([code[2],name,lineColor])
     }

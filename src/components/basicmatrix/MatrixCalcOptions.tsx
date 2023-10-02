@@ -124,7 +124,7 @@ export const DependentOptions :FC<{secondMatCode:"transpose" | "inverse" | "inte
     
     
     return <div className="tippy_div" style={{border:"1px solid grey",maxHeight:"45vh",overflow:"auto"}}>
-        { Object.keys(json).map((name)=> <Option_Tippy key={name} onSelect={()=>{insertNewDependentMatrix(`${matrixName} ${calc} ${secondMatCode} of (${name_parenthesis(name)})`,[matrixName,calc,name,secondMatCode],)}}  value={name} > {name} </Option_Tippy> ) }
+        { Object.keys(json).map((name)=> <Option_Tippy hideafterSelect={undefined} key={name} onSelect={()=>{insertNewDependentMatrix(`${matrixName} ${calc} ${secondMatCode} of (${name_parenthesis(name)})`,[matrixName,calc,name,secondMatCode],)}}  value={name} > {name} </Option_Tippy> ) }
 
     </div>
 }
