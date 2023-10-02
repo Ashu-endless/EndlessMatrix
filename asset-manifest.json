@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/EndlessMatrix/static/css/main.af13f1ab.css",
-    "main.js": "/EndlessMatrix/static/js/main.bb380016.js",
-    "static/js/787.b4b3d96d.chunk.js": "/EndlessMatrix/static/js/787.b4b3d96d.chunk.js",
-    "index.html": "/EndlessMatrix/index.html",
-    "main.af13f1ab.css.map": "/EndlessMatrix/static/css/main.af13f1ab.css.map",
-    "main.bb380016.js.map": "/EndlessMatrix/static/js/main.bb380016.js.map",
-    "787.b4b3d96d.chunk.js.map": "/EndlessMatrix/static/js/787.b4b3d96d.chunk.js.map"
+    "main.css": "/static/css/main.af13f1ab.css",
+    "main.js": "/static/js/main.8cf7a739.js",
+    "static/js/787.b4b3d96d.chunk.js": "/static/js/787.b4b3d96d.chunk.js",
+    "index.html": "/index.html",
+    "main.af13f1ab.css.map": "/static/css/main.af13f1ab.css.map",
+    "main.8cf7a739.js.map": "/static/js/main.8cf7a739.js.map",
+    "787.b4b3d96d.chunk.js.map": "/static/js/787.b4b3d96d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.af13f1ab.css",
-    "static/js/main.bb380016.js"
+    "static/js/main.8cf7a739.js"
   ]
 }
