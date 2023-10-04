@@ -197,7 +197,7 @@ export const MatrixSol =(matrix:matrix)=>{
             return math.multiply(matrix,number)
         },
         power:(number:number)=>{
-            return math.dotPow(matrix,number)
+            return math.pow(matrix,number)
         },
         eigenValue : ()=>{
 
