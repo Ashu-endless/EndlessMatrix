@@ -221,7 +221,7 @@ function App() {
         }else if(code[3] === "transpose"){
           matrix_ = MatrixSol(temp[code[2]].matrix as matrix).transpose()
         }else if(code[3] === "inverse"){
-          matrix_ = MatrixSol(json[code[2]].matrix as matrix).inverse()
+          matrix_ = MatrixSol(temp[code[2]].matrix as matrix).inverse()
         }
 
 
@@ -232,13 +232,14 @@ function App() {
         if (!temp[key].independent && code !== undefined ){
 
           let matrix = temp[code[0]].matrix as matrix
+          console.log(temp[code[0]])
 
           switch (code[1]) {
             case "*":
               temp[key].matrix = MatrixSol(matrix).multiplyBy((matrix_ as matrix))
               break;
-              case "**":
-                temp[name].matrix = MatrixSol(matrix).power((matrix_ as number))
+            case "**":
+                temp[key].matrix = MatrixSol(matrix).power((matrix_ as number))
                 break;
             case "-":
               temp[key].matrix = MatrixSol(matrix).subtract((matrix_ as matrix))

@@ -92,7 +92,7 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
     function updateMatrix(rowIndex:number,columnIndex:number,value:number){
         let temp = [...(matrix as matrix)]
         temp[rowIndex][columnIndex] = value
-        console.log(temp)
+        // console.log(temp)
         // setmatrix(temp)
         updateMatrixValues(matrixJson.name,temp,)
 
