@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Endless Matrix",
+  "name": "Matrix Calculator",
   "icons": [
     {
       "src": "favicon.ico",
