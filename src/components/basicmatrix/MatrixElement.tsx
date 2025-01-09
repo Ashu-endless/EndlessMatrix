@@ -78,7 +78,7 @@ export const MatrixElement:FC<{new_:boolean,val_:string|number,updateMatrix:Func
             
     }
 
-    return<MatrixElementInput disabled={disabled} 
+    return<MatrixElementInput key={`${index_},${index}`} disabled={disabled} 
     // onKeyDown={(e:any)=>{if(e.keycode === 38){ setval(parseFloat(e.target.value) + 1) }}} 
     onBlur={(e:React.ChangeEvent<HTMLInputElement>)=>{if(val === "" || val=== "-" ){setval("0");updateMatrix(index_,index,0)}}} 
     data-index={`${index_},${index}`} type={"text"} value={val}  onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{OnInputany(e.target.value)}} />

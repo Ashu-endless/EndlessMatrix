@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { FormEventHandler, ReactEventHandler, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import './App.css';
 import { MatrixPage } from './components/page/Page';
 import { matrix, MatrixSol } from './MatrixSol';
+import {InfoLg, InfoSquare, PlusCircle, X} from "react-bootstrap-icons"
+import ReactGA from 'react-ga4';
+import emailjs from '@emailjs/browser'
 
-const colors = ["orange","yellow","grey","blue","red","white","pink","purple"]
+const colors = ["brown","white","yellow","grey","blue","red","pink","purple"]
 
 export interface MatrixConnectorJson  {
       matrix : number[][] | string ;
@@ -23,14 +26,24 @@ export interface Matricesjson {
   [key:string] : MatrixConnectorJson
 }
 
+
 function App() {
 
-
   // const [json, setjson] = useState<{[key:string] : MatrixConnectorJson}>({"A":{independent:true,matrix:[[3,1],[4,9]],pos:{x:0,y:30},name:"A" },"B":{independent:true,matrix:[[1,0],[5,0]],pos:{x:500,y:120},name:"B"},"C":{independent:false,matrix:MatrixSol(),pos:{x:900,y:120},name:"C"}})
+  // const [json, setjson] = useState<{[key:string] : MatrixConnectorJson}>({"A":{independent:true,matrix:[[0,0],[0,0]],pos:{x:20,y:20},name:"A",dependency:[],new:true },"B":{independent:true,matrix:[[0,0],[0,0]],pos:{x:20,y:20},name:"B",dependency:[],new:true }})
   const [json, setjson] = useState<{[key:string] : MatrixConnectorJson}>({"A":{independent:true,matrix:[[0,0],[0,0]],pos:{x:20,y:20},name:"A",dependency:[],new:true }})
   const [MatrixRefs, setMatrixRefs] = useState<{[key:string]:any}>({})
   const [connection, setconnection] = useState<string[][]>([])
-  const [zoom, setzoom] = useState<string>("100%")
+  const [zoom, setzoom] = useState<string>("85%")
+  const [sidebar, setsidebar] = useState(false);
+  const [message, setmessage] = useState("")
+  const [send_email, setsend_email] = useState("")
+  const [mail_status, setmail_status] = useState("Send Suggestion")
+
+  // useEffect(() => {
+  //   setconnection(JSON.parse(JSON.stringify(connection)))
+  // }, [zoom])
+  
 
   // useEffect(() => {
   //   console.log(json)
@@ -304,12 +317,31 @@ function App() {
     }
 
     console.log(temp_connection)
-
     setconnection(JSON.parse(JSON.stringify(temp_connection)))
     setjson(temp_json)
 
     
 
+  }
+  
+  const sendSugg:FormEventHandler<HTMLFormElement> =(e)=>{
+    setmail_status("sending...");
+    e.preventDefault();
+    emailjs
+    // @ts-ignore
+      .send('service_ik84ov4', 'template_7g2vr48', {message,from_name:send_email}, {
+        publicKey: 'IhAcS8I9v_utG-6lg',
+      })
+      .then(
+        () => {
+          console.log('SUCCESS!');
+          setmail_status("Suggestion Sent !  Thank You for Your Suggestion | Feedback");
+        },
+        (error:any) => {
+          console.log('FAILED...', error.text);
+          setmail_status("Send Suggestion")
+        },
+      );
   }
 
 
@@ -337,29 +369,41 @@ function App() {
   
 
   return (<>
-  <div>
+  <div id="sidebar" style={{right:!sidebar ? "-20rem" : "0rem"}} >
+    <span className='cross'  onClick={()=>setsidebar(false)} > <X/>  </span>
 
-  <nav id='nav' >Endless Matrix 
-  <div>
-
-  <span id='addNewMatrix' onClick={()=>{insertNewMatrix("B")}} > Add New Matrix  </span>
-  {/* <span id='addNewMatrix'> Solve Expression  </span> */}
-  {/* <span id='addNewMatrix'> Definations  </span> */}
+    <form id='sugg-div' onSubmit={sendSugg} >
+      {/* @ts-ignore */}
+      <textarea placeholder='your suggestion , feedback' required value={message} onInput={(e)=>setmessage(e.target.value)} maxLength={200} name="" id="" cols={30} rows={10}/>
+      {/* @ts-ignore */}
+      <input placeholder='your email' required value={send_email} type="email" onInput={(e)=>setsend_email(e.target.value)} maxLength={200} name="" id="" />
+      <button type='submit' disabled={mail_status !== "Send Suggestion"}  className='sugg-btn' > {mail_status} </button>
+    </form>
   </div>
+  <div>
+    
+  <nav id='nav' > 
+  <div style={{display:"flex",gap:"1rem",alignItems:"center"}}>
+
+  <h4>Endless  Matrix</h4>  
+  <span id='addNewMatrix' onClick={()=>{insertNewMatrix("B")}} > <PlusCircle/> Add New Matrix  </span>
+  </div>
+    <div>
+
+  <InfoSquare style={{cursor:"pointer"}} onClick={()=>{ReactGA.event({ category: 'User', action: 'Clicked Button', label: 'Feedback Button' });;setsidebar(true)}} />
+    </div>
+
+
     </nav>
+
   <div id='zoom_div' > zoom  <input min={25} type="range" name="" id="" value={parseInt(zoom)} onChange={(e)=>{setzoom(`${e.target.value}%`)}} /> {zoom} </div> 
   </div>
 
-    {/* <span onClick={()=>{insertNewMatrix("B")}} >Add Matrix </span> */}
     <div id="MatrixPage">
-{/* <button onClick={()=>{
-  let temp = [...connection]
-  temp.push(["D","C","red"])
-  setconnection(temp)
-}} >Click</button> */}
+
     <MatrixPage deleteMatrix={deleteMatrix}  MatrixRefs={MatrixRefs} zoom={zoom} connection_={connection} insertNewDependentMatrix={insertNewDependentMatrix} updateMatrixValues={updateMatrixValues} insertNewMatrix={insertNewMatrix} UpdateMatrixRefs={UpdateMatrixRefs} json={json} />
     </div>
-
+  <span id='s'></span>
   </>
   );
 }

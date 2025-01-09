@@ -70,10 +70,10 @@ interface Option_Tippy_Props{
 
 
 export const Option_Tippy =  ({value,onSelect,activeOption,children,style,ref,TippyRef,hideafterSelect=false,className}:Option_Tippy_Props) => {
-  return (    <p ref={ref === undefined ? null : ref}
+  return (    <div ref={ref === undefined ? null : ref}
   
       onClick={(e) => {onSelect && onSelect(value,e.target); hideafterSelect && TippyRef.current.hide() }} style={style}
       className={`options ${className} ${_.isEqual(activeOption,value) && value !== undefined ? "options--selected" : ""}`}
     > {children}
-  </p>  );
+  </div>  );
 }

@@ -205,7 +205,7 @@ export const MatrixSol =(matrix:matrix)=>{
                 return "eigen value exists only for square matrix"
             }
 
-            console.log(matrix)
+            // console.log(matrix)
 
             try {
 

@@ -22,7 +22,9 @@ color: white;
 position:absolute;
 touch-action:none;
 border:2px solid cornflowerblue;
+z-index:2;
 `
+
 export const MatrixElementsDiv = styled.div`
 display: grid;
 display: grid;
@@ -131,6 +133,8 @@ display: grid;
 grid-auto-flow: column;
 align-items: center;
 justify-content: space-between;
+cursor:pointer;
+padding:5px;
 `
 
 export const NameAndDelIco = styled.div`
@@ -141,6 +145,10 @@ align-items: center;
 padding-bottom: 5px;`
 
 export const CalcBtn = styled.div`
+background: #9014d3;
+padding: 3px;
+color: white!important;
+border-radius: 3px;
 display: grid;
 justify-content: center;
 grid-auto-flow: column;

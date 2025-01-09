@@ -1,8 +1,9 @@
 import { FC, useEffect, useState } from "react";
 import { insertNewDependentMatrix, insertNewMatrix, MatrixConnectorJson } from "../../App";
-import { BasicMatrix } from "../basicmatrix/BasicMatrix";
-import Xarrow,{Xwrapper} from "react-xarrows";
+import { BasicMatrix, CleanMatrixId } from "../basicmatrix/BasicMatrix";
 import { deleteMatrix } from "../Types";
+// @ts-ignore
+import Arrow, { DIRECTION,HEAD } from 'react-arrows';
 // import Draggable from 'react-draggable';
 
 export const MatrixPage:FC<{json:{[key:string] : MatrixConnectorJson},UpdateMatrixRefs:Function,insertNewMatrix:insertNewMatrix,updateMatrixValues:Function,insertNewDependentMatrix:insertNewDependentMatrix,connection_:string[][],zoom:string,MatrixRefs:{[key:string]:{ref:any,}},deleteMatrix:deleteMatrix}> = ({json,UpdateMatrixRefs,insertNewMatrix,updateMatrixValues,insertNewDependentMatrix,connection_,zoom,MatrixRefs,deleteMatrix})=>{
@@ -14,6 +15,7 @@ export const MatrixPage:FC<{json:{[key:string] : MatrixConnectorJson},UpdateMatr
 
 
     useEffect(() => {
+        console.log(connection_)
       setconnection(connection_)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [connection_])
@@ -26,33 +28,59 @@ export const MatrixPage:FC<{json:{[key:string] : MatrixConnectorJson},UpdateMatr
 
     
  
-    return <div  style={{position:"absolute",zoom:zoom,width:"100%"}} >
-        <Xwrapper>
+    return <div  style={{position:"absolute",width:"100%",height:"100%",zoom:zoom,}} >
+        {/* <Xwrapper> */}
 
 
 
-{connection.map((connect)=>     <Xarrow 
-                // start={connect[0]} //can be react ref
-                start={(MatrixRefs[connect[0]] ).ref} //can be react ref
-                end={MatrixRefs[connect[1]].ref} //or an id
-                // end={connect[1]} //or an id
-                lineColor={connect[2]}
-                headColor={connect[2]}
-                tailColor={connect[2]}
-                dashness={{strokeLen:15,nonStrokeLen:5}}
-                key={JSON.stringify(connect)}
-                animateDrawing={true}
-                divContainerProps={{name:JSON.stringify(connect)}}
-            /> )}
+{connection.map((connect,ind)=>   (       
+           
+           document.getElementById(CleanMatrixId(connect[0])) && document.getElementById(CleanMatrixId(connect[1])) ?
+<Arrow
+key={JSON.stringify(connect)}
+  className={`arrow-${connection[ind][2]} arrow`}
 
-        { Object.keys(json).map((name)=> 
-            <BasicMatrix deleteMatrix={deleteMatrix}  MatrixRefs={MatrixRefs} zoom={zoom}  insertNewDependentMatrix={insertNewDependentMatrix} json={json}  updateMatrixValues={updateMatrixValues} insertNewMatrix={insertNewMatrix} UpdateMatrixRefs={UpdateMatrixRefs}  key={name} matrixJson={json[name]} />    
+  from={{
+    direction: DIRECTION.BOTTOM,
+    node: () => document.getElementById(CleanMatrixId(connect[0])) == null ? document.getElementById("s") : document.getElementById(CleanMatrixId(connect[0])),
+    translation: [-0.1,0.2],
+  }}
+  to={{
+    direction: DIRECTION.LEFT,
+    node:() => document.getElementById(CleanMatrixId(connect[1])) == null ? document.getElementById("s") : document.getElementById(CleanMatrixId(connect[1])),
+    translation: [0, 0],
+  }}
+//   head={HEAD.VEE}
+//   onChange={(e:MouseEvent)=>e.target.classlist()}
+/>:<></>)
+            
+            )}
+
+            
+
+        { Object.keys(json).map((name,ind)=> 
+ 
+            <BasicMatrix setconnection={setconnection} deleteMatrix={deleteMatrix}  MatrixRefs={MatrixRefs} zoom={zoom}  insertNewDependentMatrix={insertNewDependentMatrix} json={json}  updateMatrixValues={updateMatrixValues} insertNewMatrix={insertNewMatrix} UpdateMatrixRefs={UpdateMatrixRefs}  key={name} matrixJson={json[name]} />    
+
             )
             }
+
+{/* <Arrow
+  className='arrow'
+  from={{
+    direction: DIRECTION.TOP,
+    node: () => document.getElementById('A'),
+    translation: [-0.5, -1],
+  }}
+  to={{
+    direction: DIRECTION.LEFT,
+    node:() => document.getElementById('B'),
+    translation: [-0.5, -1],
+  }}
+/> */}
             
 
 
-        </Xwrapper>
 
     </div>
 }

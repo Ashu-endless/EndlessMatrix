@@ -9,9 +9,12 @@ import { insertNewDependentMatrix, MatrixConnectorJson } from "../../App";
 import Draggable from 'react-draggable';
 import DefaultTippy,{Option_Tippy} from "../defaults/DefaultTippy";
 import { AddOptions, MultiplyOptions, PowerOptions, SubtractionOptions } from "./MatrixCalcOptions";
-import {useXarrow} from "react-xarrows";
 import Swal from 'sweetalert2';
 import { deleteMatrix } from "../Types";
+
+export function CleanMatrixId(name:string){
+    return `${name.replaceAll("+","add").replaceAll("-","sub").replaceAll("*","mul").replaceAll("**","pow").replaceAll("(","C").replaceAll(")","D").replaceAll(" ","-")}`
+} 
 
 export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJson:MatrixConnectorJson,UpdateMatrixRefs?:Function,insertNewMatrix:Function,updateMatrixValues:Function,setconnection?:Function,insertNewDependentMatrix:insertNewDependentMatrix,zoom:string,MatrixRefs:{},deleteMatrix:deleteMatrix}> = ({matrixJson,UpdateMatrixRefs,insertNewMatrix,updateMatrixValues,setconnection,json,insertNewDependentMatrix,zoom,MatrixRefs,deleteMatrix})=>{
     const [matrix, setmatrix] = useState(matrixJson.matrix)
@@ -23,7 +26,6 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
     const [Isnew, setIsnew] = useState(true)
     const TippyBtnRef = useRef()
 
-    const updateXarrow = useXarrow();
     // const [dragging, setdragging] = useState(false)
     // const [frame, setFrame] = useState({
     //     translate: [0, 0],
@@ -199,19 +201,22 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
     <Draggable
         axis="both"
         defaultPosition={{x: pos.x, y: pos.y}}
-        position={undefined}
         handle={".handle"}
         // grid={[25, 25]}
         disabled={matrixJson.independent === "local"}
         scale={parseInt(zoom)/100}
-        onStart={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}}
-        onDrag={()=>{updateXarrow();DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix");}}
-        onStop={()=>{DragTargetRef.current && DragTargetRef.current && DragTargetRef.current.classList.remove("dragging_matrix");}}
+        // onStart={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}}
+        // onDrag={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix");}}
+        
+        // @ts-ignore
+        // onStop={()=>{DragTargetRef.current && DragTargetRef.current.classList.remove("dragging_matrix")}}
+        // onStop={()=>{document.querySelectorAll(".matrix-div").forEach((a)=>a.classList.add("dd"));document.querySelectorAll(".matrix-div").forEach((a)=>a.classList.remove("dd"))}}
+        onStop={()=>{setconnection((prev)=>JSON.parse(JSON.stringify(prev)))}}
         
     >
 
 
-    <MatrixDiv onClick={()=>{CalcOptionOnMount()}}  className={`matrix-div ${Isnew ?  "slide-in-blurred-top new_matrix" : ""}`}  ref={(DragTargetRef as LegacyRef<HTMLDivElement>)} id={matrixJson.name.replaceAll("+","add").replaceAll("-","sub").replaceAll("*","mul").replaceAll("**","pow").replaceAll("(","C").replaceAll(")","D").replaceAll(" ","-")} style={{position:matrixJson.independent !== "local" ? "absolute" : "relative"}} >
+    <MatrixDiv  onClick={()=>{CalcOptionOnMount()}}  className={`matrix-div ${Isnew ?  "slide-in-blurred-top new_matrix" : ""}`}  ref={(DragTargetRef as LegacyRef<HTMLDivElement>)} id={matrixJson.name.replaceAll("+","add").replaceAll("-","sub").replaceAll("*","mul").replaceAll("**","pow").replaceAll("(","C").replaceAll(")","D").replaceAll(" ","-")} style={{position:matrixJson.independent !== "local" ? "absolute" : "relative"}} >
     <NameAndDelIco>
         
     <textarea className="classic" defaultValue={matrixJson.name}  disabled={true}/>
@@ -222,7 +227,9 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
 
     {/* handle */}
     {matrixJson.independent !== "local" ? 
-    <span onTouchStart={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}} onClick={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix");setpos({x:pos.x + 5,y:pos.y+5})}} onMouseLeave={()=>{DragTargetRef.current && DragTargetRef.current.classList.remove("dragging_matrix")}} onMouseOver={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}} className="handle" style={{position: 'absolute',top: '25%',right: '5px',fontSize: 'xx-large',cursor: 'grab',zIndex:1,color:"lightslategrey"}}> <ArrowsMove/>  </span>
+    <span 
+    onTouchStart={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}} onClick={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}} onMouseLeave={()=>{DragTargetRef.current && DragTargetRef.current.classList.remove("dragging_matrix")}} onMouseOver={()=>{DragTargetRef.current && DragTargetRef.current.classList.add("dragging_matrix")}} 
+    className="handle" style={{position: 'absolute',top: '25%',right: '5px',fontSize: 'xx-large',cursor: 'grab',zIndex:1,color:"lightslategrey"}}> <ArrowsMove/>  </span>
     :<></>}
     
    {Array.isArray(matrix) && matrixSol !== undefined ? 
@@ -243,8 +250,8 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
             <span> row </span> 
             {!matrixJson.independent || matrixJson.independent === "local" ? <></> : 
             <>
-            <span> <PlusLg onClick={addRow} /> </span>
-            <span> <DashLg onClick={deleteRow}/> </span>
+            <span style={{cursor:"pointer"}}> <PlusLg onClick={addRow} /> </span>
+            <span style={{cursor:"pointer"}}> <DashLg onClick={deleteRow}/> </span>
             </>
             }
         </RowAddBtn>
@@ -254,8 +261,8 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
             <span>column</span> 
             {!matrixJson.independent || matrixJson.independent === "local" ? <></> : 
             <>
-            <span> <PlusLg onClick={addColumn} /> </span>
-            <span> <DashLg onClick={deleteColumn}/> </span>   
+            <span style={{cursor:"pointer"}}> <PlusLg onClick={addColumn} /> </span>
+            <span style={{cursor:"pointer"}}> <DashLg onClick={deleteColumn}/> </span>   
             </>
             } 
         </ColumnAddBtn>
@@ -265,7 +272,7 @@ export const BasicMatrix:FC<{json:{[key:string] : MatrixConnectorJson},matrixJso
         {matrixJson.independent !== "local" ? 
             <DefaultTippy placement="bottom" BtnRef={TippyBtnRef} content={<MatrixCalcOptions scale={parseFloat(zoom)/100 < 0.6 ? 2.5- (parseFloat(zoom)/100) : 1} matrixName={matrixJson.name} insertNewDependentMatrix={insertNewDependentMatrix} json={json} insertNewMatrix={insertNewMatrix} />}   >
 <CalcBtn>
-    <span>Calc</span>
+    <span>Use Calc</span>
         <Calculator   />
         </CalcBtn> 
             </DefaultTippy> : <></>}
